@@ -2,6 +2,10 @@ import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
+import "../Login.css";
+
+// Import the image correctly
+import LoginImage from "../../assets/images/screenshot.png";
 
 const LoginPage = () => {
   const navigate = useNavigate();
@@ -36,20 +40,19 @@ const LoginPage = () => {
   };
 
   return (
-    <div className="d-flex justify-content-center align-items-center min-vh-100 bg-light">
+    <div className="login-container">
       <div className="container">
         <div className="row justify-content-center">
           <div className="col-md-6 col-lg-5">
             <div className="card shadow-lg p-4">
               <div className="text-center">
+                {/* Use the imported image */}
                 <img
-                  src="https://via.placeholder.com/150"
+                  src={LoginImage}
                   alt="Login Illustration"
-                  className="mb-3"
-                  style={{ width: "50px" }}
+                  className="login-image"
                 />
-                <h2 className="fw-bold">Welcome Back</h2>
-                <p className="text-muted">Login to your account</p>
+                <h2 className="fw-bold">Login to your account</h2>
               </div>
 
               {alert && (
