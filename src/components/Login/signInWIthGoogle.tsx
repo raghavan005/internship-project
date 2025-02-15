@@ -1,10 +1,12 @@
+import React from "react";
 import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { auth, db } from "./firebase"; // Ensure correct path
 import { setDoc, doc } from "firebase/firestore";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import GoogleSignInImage from "../../assets/images/google_logo.png"; // Correct path
 
-function SignInwithGoogle() {
+const SignInwithGoogle: React.FC = () => {
   const navigate = useNavigate();
 
   async function googleLogin() {
@@ -33,20 +35,35 @@ function SignInwithGoogle() {
   }
 
   return (
-    <div className="text-center mt-3">
-      <button
-        className="btn btn-outline-dark d-flex align-items-center gap-2"
-        onClick={googleLogin}
+    <div className="text-center">
+      {/* Additional text between heading and Google Sign-in button */}
+      <p
+        style={{
+          fontFamily: "'Playfair Display', serif", // Stylish font
+          fontSize: "22px",
+          fontWeight: "bold",
+          marginBottom: "20px",
+          color: "#000", // Dark black color
+          textAlign: "center", // Center text
+        }}
       >
+        Continue with your Google account
+      </p>
+
+      {/* Google Sign-in Button */}
+      <div onClick={googleLogin} style={{ cursor: "pointer" }}>
         <img
-          src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg"
-          alt="Google Logo"
-          width="20"
+          src={GoogleSignInImage}
+          width="60%"
+          alt="Google Login"
+          style={{
+            borderRadius: "5px",
+            boxShadow: "0 2px 10px rgba(0,0,0,0.1)",
+          }}
         />
-        Sign in with Google
-      </button>
+      </div>
     </div>
   );
-}
+};
 
 export default SignInwithGoogle;
