@@ -30,7 +30,7 @@ const LoginPage: React.FC = () => {
                     alt="Login Illustration"
                     className="login-image"
                     style={{
-                      maxWidth: "200px",
+                      maxWidth: "300px",
                       transform: isHovered ? "scale(1.02)" : "scale(1)",
                       transition: "transform 0.3s ease",
                     }}
