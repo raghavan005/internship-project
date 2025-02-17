@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import LoginImage from "../../assets/images/screenshot.png";
 import {
   Search,
   Bell,
@@ -386,17 +387,19 @@ function App() {
       <div
         style={{
           width: "220px",
-          backgroundColor: "#343a40",
+          backgroundColor: "rgb(12, 20, 67)",
           padding: "20px",
           color: "white",
         }}
       >
-        <h4
-          style={{ marginBottom: "25px", color: "#fff", cursor: "pointer" }}
-          onClick={() => setActiveTab("market")}
-        >
-          Providance Trade
-        </h4>
+        <img
+          src={LoginImage}
+          alt="Login Illustration"
+          className="login-image"
+          style={{
+            maxWidth: "180px",
+          }}
+        />
         <div style={{ display: "flex", flexDirection: "column", gap: "15px" }}>
           <a
             href="#"

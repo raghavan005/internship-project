@@ -63,11 +63,10 @@ const LoginPage: React.FC = () => {
           .login-container {
             position: relative;
             overflow: hidden;
-            background: linear-gradient(135deg, rgb(12, 20, 69), rgb(254, 212, 160));
+            background: linear-gradient(135deg, rgb(12, 20, 69), rgb(254, 212, 160),rgb(105, 62, 9));
             background-size: 400% 400%;
             animation: gradientShift 5s infinite ease-in-out;
           }
-
           @keyframes gradientShift {
             0% {
               background-position: 0% 50%;

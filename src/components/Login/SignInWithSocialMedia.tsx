@@ -8,7 +8,7 @@ import { auth, db } from "./firebase"; // Ensure correct path
 import { setDoc, doc, getDoc } from "firebase/firestore";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import GoogleSignInImage from "../../assets/images/icons8-google-400.png"; // Correct path
+import GoogleSignInImage from "../../assets/images/icons8-google-240.png"; // Correct path
 import GithubSignInImage from "../../assets/images/icons8-github-512.png"; // Correct path
 
 const SignInWithSocialMedia: React.FC = () => {
@@ -81,9 +81,9 @@ const SignInWithSocialMedia: React.FC = () => {
       {/* Heading or additional text */}
       <p
         style={{
-          fontFamily: "'Playfair Display', serif",
+          fontFamily: "'Roboto', sans-serif", // Change to Roboto
           fontSize: "22px",
-          fontWeight: "bold",
+          fontWeight: "500", // Slightly lighter weight for better readability
           marginBottom: "20px",
           color: "rgb(230, 230, 230)",
           textAlign: "center",
@@ -93,12 +93,12 @@ const SignInWithSocialMedia: React.FC = () => {
       </p>
 
       {/* Flex container to display both buttons inline */}
-      <div style={{ display: "flex", justifyContent: "center", gap: "20px" }}>
+      <div style={{ display: "flex", justifyContent: "center", gap: "10px" }}>
         {/* Google Sign-in Button */}
         <div onClick={googleLogin} style={{ cursor: "pointer", width: "20%" }}>
           <img
             src={GoogleSignInImage}
-            width="100%"
+            width="70%"
             alt="Google Login"
             style={{
               borderRadius: "5px",
@@ -111,7 +111,7 @@ const SignInWithSocialMedia: React.FC = () => {
         <div onClick={githubLogin} style={{ cursor: "pointer", width: "20%" }}>
           <img
             src={GithubSignInImage}
-            width="100%"
+            width="70%"
             alt="GitHub Login"
             style={{
               borderRadius: "5px",
