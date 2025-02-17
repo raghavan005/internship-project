@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
-import "../Login.css";
+import "./Login.css";
 import LoginImage from "../../assets/images/screenshot.png";
 import SignInWithSocialMedia from "./SignInWithSocialMedia"; // Combined Google and GitHub Sign-In component import
 import { useNavigate } from "react-router-dom"; // useNavigate for redirect
