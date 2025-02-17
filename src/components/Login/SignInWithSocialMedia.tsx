@@ -5,7 +5,7 @@ import {
   signInWithPopup,
 } from "firebase/auth";
 import { auth, db } from "./firebase"; // Ensure correct path
-import { setDoc, doc } from "firebase/firestore";
+import { setDoc, doc, getDoc } from "firebase/firestore";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import GoogleSignInImage from "../../assets/images/icons8-google-400.png"; // Correct path
@@ -23,12 +23,18 @@ const SignInWithSocialMedia: React.FC = () => {
 
       if (user) {
         const userRef = doc(db, "Users", user.uid);
-        await setDoc(userRef, {
-          email: user.email || "",
-          firstName: user.displayName || "Unknown",
-          photo: user.photoURL || "",
-          lastName: "",
-        });
+        // Fetch user data to check if user already exists
+        const userDoc = await getDoc(userRef);
+        if (!userDoc.exists()) {
+          // If user doesn't exist, create a new user with demo money
+          await setDoc(userRef, {
+            email: user.email || "",
+            firstName: user.displayName || "Unknown",
+            photo: user.photoURL || "",
+            lastName: "",
+            demoMoney: 1000, // Assign demo money to the user
+          });
+        }
 
         toast.success("User logged in successfully!");
         navigate("/dashboard");
@@ -48,12 +54,18 @@ const SignInWithSocialMedia: React.FC = () => {
 
       if (user) {
         const userRef = doc(db, "Users", user.uid);
-        await setDoc(userRef, {
-          email: user.email || "",
-          firstName: user.displayName || "Unknown",
-          photo: user.photoURL || "",
-          lastName: "",
-        });
+        // Fetch user data to check if user already exists
+        const userDoc = await getDoc(userRef);
+        if (!userDoc.exists()) {
+          // If user doesn't exist, create a new user with demo money
+          await setDoc(userRef, {
+            email: user.email || "",
+            firstName: user.displayName || "Unknown",
+            photo: user.photoURL || "",
+            lastName: "",
+            demoMoney: 1000, // Assign demo money to the user
+          });
+        }
 
         toast.success("User logged in successfully!");
         navigate("/dashboard");
