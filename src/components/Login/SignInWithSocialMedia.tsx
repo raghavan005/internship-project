@@ -1,0 +1,115 @@
+import React from "react";
+import {
+  GoogleAuthProvider,
+  GithubAuthProvider,
+  signInWithPopup,
+} from "firebase/auth";
+import { auth, db } from "./firebase"; // Ensure correct path
+import { setDoc, doc } from "firebase/firestore";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import GoogleSignInImage from "../../assets/images/icons8-google-400.png"; // Correct path
+import GithubSignInImage from "../../assets/images/icons8-github-512.png"; // Correct path
+
+const SignInWithSocialMedia: React.FC = () => {
+  const navigate = useNavigate();
+
+  // Google login function
+  async function googleLogin() {
+    try {
+      const provider = new GoogleAuthProvider();
+      const result = await signInWithPopup(auth, provider);
+      const user = result.user;
+
+      if (user) {
+        const userRef = doc(db, "Users", user.uid);
+        await setDoc(userRef, {
+          email: user.email || "",
+          firstName: user.displayName || "Unknown",
+          photo: user.photoURL || "",
+          lastName: "",
+        });
+
+        toast.success("User logged in successfully!");
+        navigate("/dashboard");
+      }
+    } catch (error) {
+      toast.error("Login failed.");
+      console.error("Google Login Error:", error);
+    }
+  }
+
+  // GitHub login function
+  async function githubLogin() {
+    try {
+      const provider = new GithubAuthProvider();
+      const result = await signInWithPopup(auth, provider);
+      const user = result.user;
+
+      if (user) {
+        const userRef = doc(db, "Users", user.uid);
+        await setDoc(userRef, {
+          email: user.email || "",
+          firstName: user.displayName || "Unknown",
+          photo: user.photoURL || "",
+          lastName: "",
+        });
+
+        toast.success("User logged in successfully!");
+        navigate("/dashboard");
+      }
+    } catch (error) {
+      toast.error("Login failed.");
+      console.error("GitHub Login Error:", error);
+    }
+  }
+
+  return (
+    <div className="text-center">
+      {/* Heading or additional text */}
+      <p
+        style={{
+          fontFamily: "'Playfair Display', serif",
+          fontSize: "22px",
+          fontWeight: "bold",
+          marginBottom: "20px",
+          color: "rgb(230, 230, 230)",
+          textAlign: "center",
+        }}
+      >
+        Login to continue
+      </p>
+
+      {/* Flex container to display both buttons inline */}
+      <div style={{ display: "flex", justifyContent: "center", gap: "20px" }}>
+        {/* Google Sign-in Button */}
+        <div onClick={googleLogin} style={{ cursor: "pointer", width: "20%" }}>
+          <img
+            src={GoogleSignInImage}
+            width="100%"
+            alt="Google Login"
+            style={{
+              borderRadius: "5px",
+              boxShadow: "0 2px 10px rgba(0,0,0,0.1)",
+            }}
+          />
+        </div>
+
+        {/* GitHub Sign-in Button */}
+        <div onClick={githubLogin} style={{ cursor: "pointer", width: "20%" }}>
+          <img
+            src={GithubSignInImage}
+            width="100%"
+            alt="GitHub Login"
+            style={{
+              borderRadius: "5px",
+              boxShadow: "0 2px 10px rgba(0,0,0,0.1)",
+            }}
+          />
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default SignInWithSocialMedia;

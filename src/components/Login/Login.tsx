@@ -1,12 +1,24 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import "../Login.css";
 import LoginImage from "../../assets/images/screenshot.png";
-import SignInwithGoogle from "./signInWIthGoogle"; // Ensure correct import
+import SignInWithSocialMedia from "./SignInWithSocialMedia"; // Combined Google and GitHub Sign-In component import
+import { useNavigate } from "react-router-dom"; // useNavigate for redirect
 
 const LoginPage: React.FC = () => {
   const [isHovered, setIsHovered] = useState(false);
+  const navigate = useNavigate(); // Initialize navigate function
+
+  useEffect(() => {
+    // Check if the user is authenticated
+    const isAuthenticated = localStorage.getItem("isAuthenticated"); // Example of checking auth status (use your actual method)
+
+    // If the user is authenticated, redirect to dashboard
+    if (isAuthenticated === "true") {
+      navigate("/dashboard");
+    }
+  }, [navigate]);
 
   return (
     <div className="login-container min-vh-100 d-flex align-items-center justify-content-center">
@@ -31,15 +43,15 @@ const LoginPage: React.FC = () => {
                     style={{
                       maxWidth: "300px",
                       transform: isHovered ? "scale(1.02)" : "scale(1)",
-                      transition: "transform 0.3s ease",
+                      transition: "transform 0.9s ease",
                     }}
                   />
                 </div>
               </div>
 
-              {/* Google Login Button */}
+              {/* Social Media Login Buttons */}
               <div className="text-center mt-4 mb-4">
-                <SignInwithGoogle />
+                <SignInWithSocialMedia />
               </div>
             </div>
           </div>
@@ -53,7 +65,7 @@ const LoginPage: React.FC = () => {
             overflow: hidden;
             background: linear-gradient(135deg, rgb(12, 20, 69), rgb(254, 212, 160));
             background-size: 400% 400%;
-            animation: gradientShift 8s infinite ease-in-out;
+            animation: gradientShift 5s infinite ease-in-out;
           }
 
           @keyframes gradientShift {
@@ -79,16 +91,19 @@ const LoginPage: React.FC = () => {
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
           }
 
-          .google-btn-wrapper {
+          .google-btn-wrapper,
+          .github-btn-wrapper {
             transition: transform 0.3s ease;
           }
 
-          .google-btn-wrapper:hover {
+          .google-btn-wrapper:hover,
+          .github-btn-wrapper:hover {
             transform: translateY(-2px);
             filter: brightness(1.05);
           }
 
-          .google-btn-wrapper:active {
+          .google-btn-wrapper:active,
+          .github-btn-wrapper:active {
             transform: translateY(0);
           }
 
