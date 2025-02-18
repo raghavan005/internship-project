@@ -98,7 +98,7 @@ const SignInWithSocialMedia: React.FC = () => {
         <div onClick={googleLogin} style={{ cursor: "pointer", width: "20%" }}>
           <img
             src={GoogleSignInImage}
-            width="70%"
+            width="100%"
             alt="Google Login"
             style={{
               borderRadius: "5px",
@@ -111,7 +111,7 @@ const SignInWithSocialMedia: React.FC = () => {
         <div onClick={githubLogin} style={{ cursor: "pointer", width: "20%" }}>
           <img
             src={GithubSignInImage}
-            width="70%"
+            width="100%"
             alt="GitHub Login"
             style={{
               borderRadius: "5px",

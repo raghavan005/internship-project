@@ -21,7 +21,7 @@ const LoginPage: React.FC = () => {
   }, [navigate]);
 
   return (
-    <div className="login-container min-vh-100 d-flex align-items-center justify-content-center">
+    <div className="login min-vh-100 d-flex align-items-center justify-content-center">
       <div className="container position-relative">
         <div className="row justify-content-center">
           <div className="col-md-6 col-lg-5">
@@ -60,7 +60,7 @@ const LoginPage: React.FC = () => {
 
       <style>
         {`
-          .login-container {
+          .login {
             position: relative;
             overflow: hidden;
             background: linear-gradient(135deg, rgb(12, 20, 69), rgb(254, 212, 160),rgb(105, 62, 9));
@@ -80,10 +80,18 @@ const LoginPage: React.FC = () => {
           }
 
           .card {
+            width: 500px; /* Increase width */
+            height: 500px; /* Increase height */
+            padding: 2rem; /* Add more padding inside */
             background: rgba(255, 255, 255, 0.2);
             backdrop-filter: blur(10px);
             border-radius: 12px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
           }
+
 
           .login-image {
             border-radius: 10px;
