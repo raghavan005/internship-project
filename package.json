@@ -11,9 +11,11 @@
   },
   "dependencies": {
     "amqplib": "^0.10.5",
+    "axios": "^1.7.9",
     "bootstrap": "^5.3.3",
     "bootstrap-icons": "^1.11.3",
     "firebase": "^11.3.1",
+    "framer-motion": "^12.4.4",
     "lucide-react": "^0.475.0",
     "react": "^19.0.0",
     "react-bootstrap": "^2.10.9",

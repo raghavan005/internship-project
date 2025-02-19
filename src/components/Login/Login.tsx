@@ -4,7 +4,8 @@ import "bootstrap-icons/font/bootstrap-icons.css";
 import "./Login.css";
 import LoginImage from "../../assets/images/screenshot.png";
 import SignInWithSocialMedia from "./SignInWithSocialMedia"; // Combined Google and GitHub Sign-In component import
-import { useNavigate } from "react-router-dom"; // useNavigate for redirect
+import { useNavigate } from "react-router-dom";
+import { motion } from "framer-motion"; // useNavigate for redirect
 
 const LoginPage: React.FC = () => {
   const [isHovered, setIsHovered] = useState(false);
@@ -21,45 +22,46 @@ const LoginPage: React.FC = () => {
   }, [navigate]);
 
   return (
-    <div className="login min-vh-100 d-flex align-items-center justify-content-center">
-      <div className="container position-relative">
-        <div className="row justify-content-center">
-          <div className="col-md-6 col-lg-5">
-            <div
-              className="card shadow-lg p-4 border-0"
-              style={{
-                transform: isHovered ? "translateY(-5px)" : "translateY(0)",
-                transition: "all 0.3s ease",
-              }}
-              onMouseEnter={() => setIsHovered(true)}
-              onMouseLeave={() => setIsHovered(false)}
-            >
-              <div className="text-center">
-                <div className="image-wrapper position-relative mb-4">
-                  <img
-                    src={LoginImage}
-                    alt="Login Illustration"
-                    className="login-image"
-                    style={{
-                      maxWidth: "300px",
-                      transform: isHovered ? "scale(1.02)" : "scale(1)",
-                      transition: "transform 0.9s ease",
-                    }}
-                  />
+    <motion.div>
+      <div className="login min-vh-100 d-flex align-items-center justify-content-center">
+        <div className="container position-relative">
+          <div className="row justify-content-center">
+            <div className="col-md-6 col-lg-5">
+              <div
+                className="card shadow-lg p-4 border-0"
+                style={{
+                  transform: isHovered ? "translateY(-5px)" : "translateY(0)",
+                  transition: "all 0.3s ease",
+                }}
+                onMouseEnter={() => setIsHovered(true)}
+                onMouseLeave={() => setIsHovered(false)}
+              >
+                <div className="text-center">
+                  <div className="image-wrapper position-relative mb-4">
+                    <img
+                      src={LoginImage}
+                      alt="Login Illustration"
+                      className="login-image"
+                      style={{
+                        maxWidth: "300px",
+                        transform: isHovered ? "scale(1.02)" : "scale(1)",
+                        transition: "transform 0.9s ease",
+                      }}
+                    />
+                  </div>
                 </div>
-              </div>
 
-              {/* Social Media Login Buttons */}
-              <div className="text-center mt-4 mb-4">
-                <SignInWithSocialMedia />
+                {/* Social Media Login Buttons */}
+                <div className="text-center mt-4 mb-4">
+                  <SignInWithSocialMedia />
+                </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
 
-      <style>
-        {`
+        <style>
+          {`
           .login {
             position: relative;
             overflow: hidden;
@@ -118,8 +120,9 @@ const LoginPage: React.FC = () => {
             color: white !important;
           }
         `}
-      </style>
-    </div>
+        </style>
+      </div>
+    </motion.div>
   );
 };
 
