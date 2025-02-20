@@ -205,3 +205,69 @@
     font-size: 14px;
   }
 }
+
+/* Wallet Dropdown */
+.wallet-dropdown {
+  position: relative;
+  display: inline-block;
+  margin-right: 20px;
+  
+}
+
+/* Wallet Button */
+.wallet-button {
+   background-color: #343a40;
+  border: none;
+  color: white;
+  padding: 5px 10px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+}
+
+.wallet-button:hover {
+  background-color: #1f1e1c23; /* Slightly lighter yellow */
+}
+
+/* Wallet Icon */
+.wallet-icon {
+  margin-right: 10px;
+}
+
+/* Wallet Dropdown Menu */
+.wallet-menu {
+  display: block;
+  min-width: 220px;
+  padding: 10px;
+  border-radius: 8px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Wallet Header */
+.wallet-menu .dropdown-header {
+  font-size: 16px;
+  font-weight: bold;
+  color: #333;
+}
+
+/* Wallet Balance */
+.wallet-balance {
+  font-size: 18px;
+  font-weight: bold;
+  color: #27ae60; /* Green for balance */
+}
+
+/* Wallet Buttons */
+.wallet-add,
+.wallet-withdraw {
+  font-size: 14px;
+  padding: 8px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.wallet-add:hover,
+.wallet-withdraw:hover {
+  background-color: rgb(227, 228, 236);
+}
+

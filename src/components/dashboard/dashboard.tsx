@@ -1,7 +1,8 @@
-import React, { useState, useCallback, useMemo } from "react";
+import React, { useState, useCallback, useMemo,useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import logo from "../../assets/images/screenshot.png";
+
 import { useAuth } from "../dashboard/AuthContext"; // ✅ Import Auth Context
 import {
   TrendingUp,
@@ -13,6 +14,7 @@ import {
   Edit,
   Settings,
   LogOut,
+  CreditCard,
 } from "lucide-react";
 import useStockData from "../hook/useStockData";
 import Chart from "./chart";
@@ -27,9 +29,88 @@ const menuItems = [
   { name: "Reports", icon: <BookOpen size={20} /> },
 ];
 
+// ✅ Wallet Dropdown Component
+const WalletDropdown = () => {
+  const { user, userData, updateWallet } = useAuth(); // Access userData and updateWallet
+
+  const [showWalletDropdown, setShowWalletDropdown] = useState(false);
+
+  useEffect(() => {
+    // No need to initialize walletAmount here. It's coming from userData.
+  }, [userData]); // Re-run effect when userData changes
+
+  if (!user || !userData) return null; // Hide if no user or userData is available
+
+  const handleAddFunds = async () => {
+    try {
+      await updateWallet(100); // Use updateWallet from context
+      alert("Added ₹100 successfully!"); // Provide user feedback
+    } catch (error) {
+      console.error("Error adding funds:", error);
+      alert("Failed to add funds. Please try again."); // Handle errors
+    }
+  };
+
+  const handleWithdrawFunds = async () => {
+    const amount = parseFloat(
+      prompt("Enter amount to withdraw:", "100") || "0"
+    );
+    if (isNaN(amount) || amount <= 0) {
+      alert("Please enter a valid amount to withdraw.");
+      return;
+    }
+    try {
+      await updateWallet(-amount); // Use updateWallet with a negative amount
+      alert(`Withdrawn ₹${amount} successfully!`);
+    } catch (error) {
+      console.error("Error withdrawing funds:", error);
+      alert("Failed to withdraw funds. Please try again.");
+    }
+  };
+
+  return (
+    <div className="wallet-dropdown">
+      <button
+        className="btn btn-warning dropdown-toggle wallet-button"
+        type="button"
+        onClick={() => setShowWalletDropdown(!showWalletDropdown)}
+        aria-haspopup="true"
+        aria-expanded={showWalletDropdown}
+      >
+        <CreditCard size={24} className="wallet-icon" />$
+        {userData?.walletAmount?.toFixed(2) || "0.00"}{" "}
+        
+      </button>
+
+      {showWalletDropdown && (
+        <div className="dropdown-menu dropdown-menu-right wallet-menu">
+          <h6 className="dropdown-header">Wallet Balance</h6>
+          <p className="dropdown-item-text wallet-balance">
+            <strong>₹{userData?.walletAmount?.toFixed(2) || "0.00"}</strong>{" "}
+            
+          </p>
+          <div className="dropdown-divider"></div>
+          <button className="dropdown-item wallet-add" onClick={handleAddFunds}>
+            ➕ Add ₹100
+          </button>
+          <button
+            className="dropdown-item wallet-withdraw"
+            onClick={handleWithdrawFunds} 
+          >
+            ➖ Withdraw
+          </button>
+        </div>
+      )}
+    </div>
+  );
+};
+
+
+
+
 // ✅ User Profile Drop-down Component
 const UserProfileDropdown = () => {
-  const { user, logout } = useAuth(); // ✅ Fetch user & logout function
+  const { user } = useAuth(); // ✅ Fetch user
   const navigate = useNavigate();
   const [showDropdown, setShowDropdown] = useState(false);
 
@@ -71,7 +152,10 @@ const UserProfileDropdown = () => {
           >
             <Settings size={18} className="me-1" /> Settings
           </button>
-          <button className="dropdown-item text-danger" onClick={logout}>
+          <button
+            className="dropdown-item text-danger"
+            onClick={() => navigate("/login")} // Redirect to login page
+          >
             <LogOut size={18} className="me-1" /> Logout
           </button>
         </div>
@@ -128,8 +212,9 @@ const Dashboard = () => {
         </div>
       </div>
 
-      {/* ✅ User Profile Nav */}
+      {/* ✅ User Profile & Wallet Navbar */}
       <div className="user-navbar">
+        <WalletDropdown />
         <UserProfileDropdown />
       </div>
 
