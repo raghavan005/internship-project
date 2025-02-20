@@ -1,6 +1,8 @@
 import React, { useState, useCallback, useMemo } from "react";
+import { useNavigate } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import logo from "../../assets/images/screenshot.png";
+import { useAuth } from "../dashboard/AuthContext"; // ✅ Import Auth Context
 import {
   TrendingUp,
   Briefcase,
@@ -8,12 +10,14 @@ import {
   FileText,
   BookOpen,
   User,
+  Edit,
+  Settings,
+  LogOut,
 } from "lucide-react";
 import useStockData from "../hook/useStockData";
 import Chart from "./chart";
 import "./dashboard.css";
-import Trading from "./symbol"
-import TradingViewTickerTape from "./tape"
+import Trading from "./symbol";
 
 const menuItems = [
   { name: "Dashboard", icon: <TrendingUp size={20} /> },
@@ -23,19 +27,69 @@ const menuItems = [
   { name: "Reports", icon: <BookOpen size={20} /> },
 ];
 
+// ✅ User Profile Drop-down Component
+const UserProfileDropdown = () => {
+  const { user, logout } = useAuth(); // ✅ Fetch user & logout function
+  const navigate = useNavigate();
+  const [showDropdown, setShowDropdown] = useState(false);
+
+  if (!user) return null; // ✅ Hide dropdown if no user is logged in
+
+  return (
+    <div
+      className="user-profile-dropdown"
+      style={{ position: "relative", display: "inline-block" }}
+    >
+      <button
+        className="btn btn-secondary dropdown-toggle"
+        type="button"
+        onClick={() => setShowDropdown(!showDropdown)}
+        aria-haspopup="true"
+        aria-expanded={showDropdown}
+      >
+        <User size={24} style={{ marginRight: "8px" }} />
+        {user.displayName || "User"}
+      </button>
+
+      {showDropdown && (
+        <div
+          className="dropdown-menu dropdown-menu-right"
+          style={{ display: "block" }}
+        >
+          <h6 className="dropdown-header">{user.displayName || "User"}</h6>
+          <p className="dropdown-item-text">{user.email || "No Email"}</p>
+          <div className="dropdown-divider"></div>
+          <button
+            className="dropdown-item"
+            onClick={() => navigate("/profile")}
+          >
+            <Edit size={18} className="me-1" /> Edit Profile
+          </button>
+          <button
+            className="dropdown-item"
+            onClick={() => navigate("/settings")}
+          >
+            <Settings size={18} className="me-1" /> Settings
+          </button>
+          <button className="dropdown-item text-danger" onClick={logout}>
+            <LogOut size={18} className="me-1" /> Logout
+          </button>
+        </div>
+      )}
+    </div>
+  );
+};
+
+// ✅ Dashboard Component
 const Dashboard = () => {
   const [activePage, setActivePage] = useState("Dashboard");
   const stocks = useStockData();
 
+  // ✅ Renders content based on selected menu
   const renderContent = useCallback(() => {
     switch (activePage) {
       case "Dashboard":
-        return (
-          <>
-            <Trading />
-            <TradingViewTickerTape />
-          </>
-        );
+        return <Trading />;
       case "Watchlist":
         return <Chart />;
       case "Mutual Funds":
@@ -74,14 +128,12 @@ const Dashboard = () => {
         </div>
       </div>
 
-      {/* ✅ User Profile Navbar */}
+      {/* ✅ User Profile Nav */}
       <div className="user-navbar">
-        <div className="user-profile">
-          <User size={24} /> <span>John Doe</span>
-        </div>
+        <UserProfileDropdown />
       </div>
 
-      {/* ✅ Sidebar */}
+      {/* ✅ Sidebar Navigation */}
       <div className="sidebar">
         <div className="logo-container">
           <img src={logo} alt="Providance Logo" className="sidebar-logo" />
