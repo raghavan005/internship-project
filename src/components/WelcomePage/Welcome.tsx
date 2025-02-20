@@ -43,7 +43,10 @@ function Welcome() {
         </header>
 
         {/* Main Content */}
-        <main className="container-fluid d-flex justify-content-center align-items-center pt-10">
+        <main
+          className="container-fluid d-flex justify-content-center align-items-center pt-10"
+          style={{ backgroundColor: "rgb(7, 16, 63)", minHeight: "100vh" }}
+        >
           <div className="row col-1 pt-5 w-100 gap-3 justify-content-center">
             {/* Market Analysis (Video) */}
             <div className="col-md-5 d-flex justify-content-center align-items-center">

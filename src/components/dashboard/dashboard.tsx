@@ -12,6 +12,8 @@ import {
 import useStockData from "../hook/useStockData";
 import Chart from "./chart";
 import "./dashboard.css";
+import Trading from "./symbol"
+import TradingViewTickerTape from "./tape"
 
 const menuItems = [
   { name: "Dashboard", icon: <TrendingUp size={20} /> },
@@ -28,7 +30,12 @@ const Dashboard = () => {
   const renderContent = useCallback(() => {
     switch (activePage) {
       case "Dashboard":
-        return <h2>📊 Dashboard Content</h2>;
+        return (
+          <>
+            <Trading />
+            <TradingViewTickerTape />
+          </>
+        );
       case "Watchlist":
         return <Chart />;
       case "Mutual Funds":
