@@ -3,7 +3,7 @@ import { TrendingUp, Wallet, Coins, Diamond } from "lucide-react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import video from "../../assets/images/welcome speech (1).mp4";
 import "./welcome.css";
-import logo from "../../assets/images/screenshot.png";
+import logo from "../../assets/images/final.png";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion"; // Import useNavigate
 
@@ -38,7 +38,7 @@ function Welcome() {
             src={logo}
             alt="Providence Trade Logo"
             className="w-100"
-            style={{ height: "150px", objectFit: "contain" }}
+            style={{ height: "300px", objectFit: "contain" }}
           />
         </header>
 
@@ -152,12 +152,14 @@ function Welcome() {
         </main>
 
         {/* Get Started Button */}
-        <button
+        <motion.button
+        whileHover={{scale:1.3}}
+        whileTap={{scale:0.9}}
           className="get-started-btn"
           onClick={() => (window.location.href = "/login")}
         >
           Get Started
-        </button>
+        </motion.button>
       </div>
     </motion.div>
   );

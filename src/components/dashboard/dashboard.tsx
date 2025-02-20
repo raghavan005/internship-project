@@ -2,8 +2,9 @@ import React, { useState, useCallback, useMemo,useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import logo from "../../assets/images/screenshot.png";
-
+import {motion} from "framer-motion"
 import { useAuth } from "../dashboard/AuthContext"; // ✅ Import Auth Context
+import CustomBox from "./buysell"
 import {
   TrendingUp,
   Briefcase,
@@ -20,6 +21,9 @@ import useStockData from "../hook/useStockData";
 import Chart from "./chart";
 import "./dashboard.css";
 import Trading from "./symbol";
+import PurchaseHistory from "./PurchaseHistory"
+
+
 
 const menuItems = [
   { name: "Dashboard", icon: <TrendingUp size={20} /> },
@@ -70,7 +74,11 @@ const WalletDropdown = () => {
 
   return (
     <div className="wallet-dropdown">
-      <button
+      <motion.button
+        initial={{ scale: 0.9 }}
+        animate={{ scale: 1 }}
+        whileTap={{ scale: 0.95 }}
+        transition={{ type: "spring", stiffness: 300 }}
         className="btn btn-warning dropdown-toggle wallet-button"
         type="button"
         onClick={() => setShowWalletDropdown(!showWalletDropdown)}
@@ -79,15 +87,19 @@ const WalletDropdown = () => {
       >
         <CreditCard size={24} className="wallet-icon" />$
         {userData?.walletAmount?.toFixed(2) || "0.00"}{" "}
-        
-      </button>
+      </motion.button>
 
       {showWalletDropdown && (
-        <div className="dropdown-menu dropdown-menu-right wallet-menu">
+        <motion.div
+          initial={{ scale: 0.9, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          exit={{ scale: 0.9, opacity: 0 }}
+          className="dropdown-menu dropdown-menu-right wallet-menu"
+          transition={{ type: "spring", stiffness: 300 }}
+        >
           <h6 className="dropdown-header">Wallet Balance</h6>
           <p className="dropdown-item-text wallet-balance">
             <strong>₹{userData?.walletAmount?.toFixed(2) || "0.00"}</strong>{" "}
-            
           </p>
           <div className="dropdown-divider"></div>
           <button className="dropdown-item wallet-add" onClick={handleAddFunds}>
@@ -95,11 +107,11 @@ const WalletDropdown = () => {
           </button>
           <button
             className="dropdown-item wallet-withdraw"
-            onClick={handleWithdrawFunds} 
+            onClick={handleWithdrawFunds}
           >
             ➖ Withdraw
           </button>
-        </div>
+        </motion.div>
       )}
     </div>
   );
@@ -121,7 +133,10 @@ const UserProfileDropdown = () => {
       className="user-profile-dropdown"
       style={{ position: "relative", display: "inline-block" }}
     >
-      <button
+      <motion.button
+        initial={{ scale: 0.9, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        exit={{ scale: 0.9, opacity: 0 }}
         className="btn btn-secondary dropdown-toggle"
         type="button"
         onClick={() => setShowDropdown(!showDropdown)}
@@ -130,22 +145,27 @@ const UserProfileDropdown = () => {
       >
         <User size={24} style={{ marginRight: "8px" }} />
         {user.displayName || "User"}
-      </button>
+      </motion.button>
 
       {showDropdown && (
-        <div
+        <motion.div
+          initial={{ scale: 0.9 }}
+          animate={{ scale: 1 }}
+          whileTap={{ scale: 0.95 }}
+          transition={{ type: "spring", stiffness: 300 }}
           className="dropdown-menu dropdown-menu-right"
           style={{ display: "block" }}
         >
           <h6 className="dropdown-header">{user.displayName || "User"}</h6>
           <p className="dropdown-item-text">{user.email || "No Email"}</p>
           <div className="dropdown-divider"></div>
-          <button
+          <motion.button
+           
             className="dropdown-item"
             onClick={() => navigate("/profile")}
           >
             <Edit size={18} className="me-1" /> Edit Profile
-          </button>
+          </motion.button>
           <button
             className="dropdown-item"
             onClick={() => navigate("/settings")}
@@ -158,7 +178,7 @@ const UserProfileDropdown = () => {
           >
             <LogOut size={18} className="me-1" /> Logout
           </button>
-        </div>
+        </motion.div>
       )}
     </div>
   );
@@ -173,9 +193,19 @@ const Dashboard = () => {
   const renderContent = useCallback(() => {
     switch (activePage) {
       case "Dashboard":
-        return <Trading />;
+        return (
+          <>
+            <Trading />
+            <PurchaseHistory />
+          </>
+        );
       case "Watchlist":
-        return <Chart />;
+        return (
+          <>
+            <Chart />
+            <CustomBox />
+          </>
+        );
       case "Mutual Funds":
         return <h2>💰 Mutual Funds Content</h2>;
       case "Portfolio":
@@ -226,7 +256,10 @@ const Dashboard = () => {
         <ul className="nav flex-column">
           {menuItems.map((item) => (
             <li key={item.name} className="nav-item">
-              <button
+              <motion.button
+                whileHover={{ scale: 1.2 }}
+                whileTap={{ scale: 0.95 }}
+                transition={{ type: "spring", stiffness: 200, damping: 10 }}
                 className={`nav-button ${
                   activePage === item.name ? "active" : ""
                 }`}
@@ -234,7 +267,7 @@ const Dashboard = () => {
                 aria-label={`Navigate to ${item.name}`}
               >
                 {item.icon} <span className="nav-text">{item.name}</span>
-              </button>
+              </motion.button>
             </li>
           ))}
         </ul>

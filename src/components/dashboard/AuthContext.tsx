@@ -7,13 +7,35 @@ import {
 } from "react";
 import { auth, db } from "../Login/firebase";
 import { onAuthStateChanged } from "firebase/auth";
-import { doc, getDoc, updateDoc, setDoc } from "firebase/firestore"; // Import setDoc
+import { doc, getDoc, updateDoc, setDoc, arrayUnion } from "firebase/firestore";
+
+// Define the structure of a purchase history item
+interface PurchaseHistoryItem {
+  stock: string;
+  type: "buy" | "sell";
+  quantity: number;
+  price: number;
+  brokerageFee: number;
+  totalAmount: number;
+  date: string;
+}
 
 // Define Type for AuthContext
 interface AuthContextType {
   user: any | null;
-  userData: any | null;
+  userData: {
+    walletAmount: number;
+    purchaseHistory: PurchaseHistoryItem[];
+  } | null;
+  purchaseHistory: PurchaseHistoryItem[];
   updateWallet: (amount: number) => Promise<void>;
+  recordTransaction: (
+    stock: string,
+    type: "buy" | "sell",
+    quantity: number,
+    price: number,
+    brokerageFee: number
+  ) => Promise<void>;
 }
 
 // Create the Auth Context
@@ -27,13 +49,16 @@ interface AuthProviderProps {
 // Auth Provider Component
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [user, setUser] = useState<any | null>(null);
-  const [userData, setUserData] = useState<any | null>(null);
-  const [loading, setLoading] = useState(true); // Add loading state
+  const [userData, setUserData] = useState<{
+    walletAmount: number;
+    purchaseHistory: PurchaseHistoryItem[];
+  } | null>(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       setUser(currentUser);
-      setLoading(true); // Set loading to true while fetching data
+      setLoading(true);
 
       if (currentUser) {
         const userRef = doc(db, "users", currentUser.uid);
@@ -42,25 +67,31 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
           const userSnap = await getDoc(userRef);
 
           if (userSnap.exists()) {
-            setUserData(userSnap.data());
+            const data = userSnap.data();
+            setUserData({
+              walletAmount: data.walletAmount ?? 0,
+              purchaseHistory: Array.isArray(data.purchaseHistory)
+                ? data.purchaseHistory
+                : [],
+            });
           } else {
             // Create user document if it doesn't exist
-            await setDoc(userRef, { walletAmount: 0 }); // Initialize wallet amount
-            setUserData({ walletAmount: 0 });
+            await setDoc(userRef, { walletAmount: 0, purchaseHistory: [] });
+            setUserData({ walletAmount: 0, purchaseHistory: [] });
           }
         } catch (error) {
           console.error("Error fetching/creating user data:", error);
-          // Handle error, e.g., display an error message
         }
       } else {
         setUserData(null);
       }
-      setLoading(false); // Set loading to false after data is fetched or error occurs
+      setLoading(false);
     });
 
     return () => unsubscribe();
   }, []);
 
+  // ✅ Update Wallet Function
   const updateWallet = async (amount: number) => {
     if (!user) return;
     const userRef = doc(db, "users", user.uid);
@@ -69,23 +100,73 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       const userSnap = await getDoc(userRef);
       if (userSnap.exists()) {
         const currentBalance = userSnap.data().walletAmount || 0;
-        const newBalance = Math.max(0, currentBalance + amount); // Prevent negative balance
+        const newBalance = Math.max(0, currentBalance + amount);
 
         await updateDoc(userRef, { walletAmount: newBalance });
-        setUserData((prev: any) => ({ ...prev, walletAmount: newBalance }));
+        setUserData((prev) =>
+          prev ? { ...prev, walletAmount: newBalance } : null
+        );
       }
     } catch (error) {
       console.error("Error updating wallet:", error);
-      // Handle error, e.g., display an error message to the user
+    }
+  };
+
+  // ✅ Record Transaction Function (Stores Purchase History)
+  const recordTransaction = async (
+    stock: string,
+    type: "buy" | "sell",
+    quantity: number,
+    price: number,
+    brokerageFee: number
+  ) => {
+    if (!user) return;
+
+    const userRef = doc(db, "users", user.uid);
+
+    const transaction: PurchaseHistoryItem = {
+      stock,
+      type,
+      quantity,
+      price: parseFloat(price.toFixed(2)), // Ensuring proper decimal format
+      brokerageFee: parseFloat(brokerageFee.toFixed(2)),
+      totalAmount: parseFloat((price + brokerageFee).toFixed(2)),
+      date: new Date().toISOString(),
+    };
+
+    console.log("Recording transaction:", transaction);
+
+    try {
+      await updateDoc(userRef, {
+        purchaseHistory: arrayUnion(transaction),
+      });
+
+      // Update local state
+      setUserData((prev) =>
+        prev
+          ? { ...prev, purchaseHistory: [...prev.purchaseHistory, transaction] }
+          : null
+      );
+      console.log("Transaction recorded successfully!");
+    } catch (error) {
+      console.error("Error recording transaction:", error);
     }
   };
 
   if (loading) {
-    return <div>Loading...</div>; // Display loading state
+    return <div>Loading...</div>;
   }
 
   return (
-    <AuthContext.Provider value={{ user, userData, updateWallet }}>
+    <AuthContext.Provider
+      value={{
+        user,
+        userData,
+        purchaseHistory: userData?.purchaseHistory || [],
+        updateWallet,
+        recordTransaction,
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );

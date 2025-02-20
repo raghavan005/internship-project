@@ -36,7 +36,7 @@ const LoginPage: React.FC = () => {
                 onMouseEnter={() => setIsHovered(true)}
                 onMouseLeave={() => setIsHovered(false)}
               >
-                <div className="text-center">
+                <motion.div className="text-center">
                   <div className="image-wrapper position-relative mb-4">
                     <img
                       src={LoginImage}
@@ -49,7 +49,7 @@ const LoginPage: React.FC = () => {
                       }}
                     />
                   </div>
-                </div>
+                </motion.div>
 
                 {/* Social Media Login Buttons */}
                 <div className="text-center mt-4 mb-4">
@@ -65,9 +65,9 @@ const LoginPage: React.FC = () => {
           .login {
             position: relative;
             overflow: hidden;
-            background: linear-gradient(135deg, rgb(12, 20, 69), rgb(254, 212, 160),rgb(105, 62, 9));
+            background: linear-gradient(90deg, rgba(12, 20, 69, 0.72), rgba(254, 212, 160, 0.62),rgba(105, 62, 9, 0.64));
             background-size: 400% 400%;
-            animation: gradientShift 5s infinite ease-in-out;
+            animation: gradientShift 7s infinite ease-in-out;
           }
           @keyframes gradientShift {
             0% {
