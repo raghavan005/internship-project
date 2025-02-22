@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { doc, updateDoc, arrayUnion } from "firebase/firestore";
-import { db } from "../Login/firebase"; // Ensure Firebase is correctly imported
+import { doc, updateDoc, arrayUnion, getDoc } from "firebase/firestore";
+import { db } from "../Login/firebase";
 import useStockData from "../hook/useStockData";
 import { useAuth } from "../dashboard/AuthContext";
 
@@ -12,13 +12,101 @@ const CustomBox = () => {
     stocks.length > 0 ? stocks[0].name : ""
   );
   const [quantity, setQuantity] = useState(1);
+  const [userHoldings, setUserHoldings] = useState(0);
+  const [equityDetails, setEquityDetails] = useState({
+    invested: 0,
+    current: 0,
+    todayPL: 0,
+    todayPLPercent: 0,
+    totalPL: 0,
+    totalPLPercent: 0,
+  });
+
+  useEffect(() => {
+    const fetchHoldings = async () => {
+      if (user && userData && selectedStock) {
+        const userRef = doc(db, "users", user.uid);
+        try {
+          const userSnap = await getDoc(userRef);
+          if (userSnap.exists()) {
+            const data = userSnap.data();
+
+            // Fetch user holdings
+            if (Array.isArray(data.purchases)) {
+              const buyOrders = data.purchases.filter(
+                (p) =>
+                  p.stock.toLowerCase() === selectedStock.toLowerCase() &&
+                  p.type === "buy"
+              );
+              const sellOrders = data.purchases.filter(
+                (p) =>
+                  p.stock.toLowerCase() === selectedStock.toLowerCase() &&
+                  p.type === "sell"
+              );
+              const holdings =
+                buyOrders.reduce((acc, p) => acc + p.quantity, 0) -
+                sellOrders.reduce((acc, p) => acc + p.quantity, 0);
+              setUserHoldings(holdings);
+            } else {
+              setUserHoldings(0);
+            }
+
+            // Fetch equity details (adjust field name if needed)
+            if (data.equityDetails) {
+              setEquityDetails(data.equityDetails);
+            } else {
+              setEquityDetails({
+                invested: 0,
+                current: 0,
+                todayPL: 0,
+                todayPLPercent: 0,
+                totalPL: 0,
+                totalPLPercent: 0,
+              });
+            }
+          } else {
+            setUserHoldings(0);
+            setEquityDetails({
+              invested: 0,
+              current: 0,
+              todayPL: 0,
+              todayPLPercent: 0,
+              totalPL: 0,
+              totalPLPercent: 0,
+            });
+          }
+        } catch (error) {
+          console.error("Error fetching holdings:", error);
+          setUserHoldings(0);
+          setEquityDetails({
+            invested: 0,
+            current: 0,
+            todayPL: 0,
+            todayPLPercent: 0,
+            totalPL: 0,
+            totalPLPercent: 0,
+          });
+        }
+      } else {
+        setUserHoldings(0);
+        setEquityDetails({
+          invested: 0,
+          current: 0,
+          todayPL: 0,
+          todayPLPercent: 0,
+          totalPL: 0,
+          totalPLPercent: 0,
+        });
+      }
+    };
+    fetchHoldings();
+  }, [user, userData, selectedStock]);
 
   const stock = stocks.find((s) => s.name === selectedStock) || {
     name: "Select Stock",
     value: "0",
   };
 
-  // Convert stock value to a valid number
   const stockPrice = parseFloat(stock.value.replace(/[^0-9.]/g, "")) * quantity;
 
   const handleTransaction = async (type: "buy" | "sell") => {
@@ -37,17 +125,30 @@ const CustomBox = () => {
         alert("Insufficient balance");
         return;
       }
-      await updateWallet(-stockPrice); // Deduct from wallet
+      try {
+        await updateWallet(-stockPrice);
+      } catch (error) {
+        alert("Error updating wallet.");
+        return;
+      }
     } else if (type === "sell") {
-      await updateWallet(stockPrice); // Add to wallet
+      if (quantity > userHoldings) {
+        alert("Insufficient holdings to sell.");
+        return;
+      }
+      try {
+        await updateWallet(stockPrice);
+      } catch (error) {
+        alert("Error updating wallet.");
+        return;
+      }
     }
 
-    // Reference to user's Firestore document
     const userRef = doc(db, "users", user.uid);
 
     try {
       await updateDoc(userRef, {
-        purchaseHistory: arrayUnion({
+        purchases: arrayUnion({
           stock: stock.name,
           type,
           quantity,
@@ -87,7 +188,6 @@ const CustomBox = () => {
         boxShadow: "0 -2px 5px rgba(0, 0, 0, 0.2)",
       }}
     >
-      {/* Dropdown to select stock */}
       <motion.select
         initial={{ scale: 0.9 }}
         animate={{ scale: 1 }}
@@ -114,12 +214,10 @@ const CustomBox = () => {
         ))}
       </motion.select>
 
-      {/* Stock Name and Price */}
       <span>
         {stock.name}: ${stock.value}
       </span>
 
-      {/* Quantity Input */}
       <motion.input
         type="number"
         value={quantity}
@@ -139,7 +237,8 @@ const CustomBox = () => {
         }}
       />
 
-      {/* Buy and Sell Buttons */}
+      <span>Holdings: {userHoldings}</span>
+
       <div>
         <motion.button
           onClick={() => handleTransaction("buy")}
@@ -160,14 +259,15 @@ const CustomBox = () => {
 
         <motion.button
           onClick={() => handleTransaction("sell")}
-          disabled={!selectedStock}
+          disabled={!selectedStock || userHoldings < 1}
           style={{
             backgroundColor: selectedStock ? "red" : "gray",
             color: "white",
             border: "none",
             padding: "10px 20px",
             borderRadius: "5px",
-            cursor: selectedStock ? "pointer" : "not-allowed",
+            cursor:
+              selectedStock && userHoldings >= 1 ? "pointer" : "not-allowed",
             fontSize: "16px",
           }}
         >

@@ -22,6 +22,7 @@ import Chart from "./chart";
 import "./dashboard.css";
 import Trading from "./symbol";
 import PurchaseHistory from "./PurchaseHistory"
+import Box from "./userdetail";
 
 
 
@@ -197,6 +198,7 @@ const Dashboard = () => {
           <>
             <Trading />
             <PurchaseHistory />
+            <Box />
           </>
         );
       case "Watchlist":

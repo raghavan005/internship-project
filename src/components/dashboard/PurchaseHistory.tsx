@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useAuth } from "../dashboard/AuthContext";
 import { db } from "../Login/firebase";
-import { doc, getDoc } from "firebase/firestore";
+import { doc, onSnapshot } from "firebase/firestore";
 
-// Define the type for purchase history entries
 interface PurchaseEntry {
   stock: string;
   type: "buy" | "sell";
@@ -17,6 +16,7 @@ const PurchaseHistory: React.FC = () => {
   const [purchaseHistory, setPurchaseHistory] = useState<PurchaseEntry[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [holdings, setHoldings] = useState<{ [stock: string]: number }>({}); // Track holdings
 
   useEffect(() => {
     if (!user) {
@@ -25,33 +25,57 @@ const PurchaseHistory: React.FC = () => {
       return;
     }
 
-    const fetchPurchaseHistory = async () => {
-  try {
     const userRef = doc(db, "users", user.uid);
-    const userSnap = await getDoc(userRef);
 
-    if (userSnap.exists()) {
-      const data = userSnap.data();
-      console.log("Fetched Firestore Data:", data); // Debugging
+    const unsubscribe = onSnapshot(
+      userRef,
+      (docSnapshot) => {
+        if (docSnapshot.exists()) {
+          const data = docSnapshot.data();
 
-      if (Array.isArray(data.purchases)) {
-        setPurchaseHistory(data.purchases);
-      } else {
-        console.warn("Firestore 'purchases' is not an array:", data.purchases);
-        setPurchaseHistory([]); // Prevent errors
+          if (Array.isArray(data.purchases)) {
+            const filteredPurchases = data.purchases.filter(
+              (entry) =>
+                entry.stock !== "" &&
+                entry.type !== "" &&
+                entry.quantity !== "" &&
+                entry.price !== "" &&
+                entry.date !== ""
+            );
+            setPurchaseHistory(filteredPurchases);
+
+            // Calculate holdings
+            const newHoldings: { [stock: string]: number } = {};
+            filteredPurchases.forEach((entry) => {
+              const stock = entry.stock;
+              if (!newHoldings[stock]) {
+                newHoldings[stock] = 0;
+              }
+              if (entry.type === "buy") {
+                newHoldings[stock] += entry.quantity;
+              } else if (entry.type === "sell") {
+                newHoldings[stock] -= entry.quantity;
+              }
+            });
+            setHoldings(newHoldings);
+          } else {
+            setPurchaseHistory([]);
+            setHoldings({});
+          }
+        } else {
+          setError("No purchase history found.");
+          setHoldings({});
+        }
+        setLoading(false);
+      },
+      (err) => {
+        console.error("Error fetching purchase history:", err);
+        setError("Error loading purchase history.");
+        setLoading(false);
       }
-    } else {
-      setError("No purchase history found.");
-    }
-  } catch (err) {
-    console.error("Error fetching purchase history:", err);
-    setError("Error loading purchase history.");
-  } finally {
-    setLoading(false);
-  }
-};
+    );
 
-    fetchPurchaseHistory();
+    return () => unsubscribe();
   }, [user]);
 
   return (
@@ -73,6 +97,7 @@ const PurchaseHistory: React.FC = () => {
               <th style={thStyle}>Quantity</th>
               <th style={thStyle}>Price</th>
               <th style={thStyle}>Date</th>
+              <th style={thStyle}>Holdings</th>
             </tr>
           </thead>
           <tbody>
@@ -93,6 +118,7 @@ const PurchaseHistory: React.FC = () => {
                 <td style={tdStyle}>{entry.quantity}</td>
                 <td style={tdStyle}>${entry.price}</td>
                 <td style={tdStyle}>{new Date(entry.date).toLocaleString()}</td>
+                <td style={tdStyle}>{holdings[entry.stock] || 0}</td>
               </tr>
             ))}
           </tbody>
@@ -102,7 +128,7 @@ const PurchaseHistory: React.FC = () => {
   );
 };
 
-// Styles
+// Styles (same as before)
 const containerStyle: React.CSSProperties = {
   padding: "20px",
   color: "white",
