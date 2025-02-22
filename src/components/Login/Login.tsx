@@ -37,7 +37,12 @@ const LoginPage: React.FC = () => {
                 onMouseLeave={() => setIsHovered(false)}
               >
                 <motion.div className="text-center">
-                  <div className="image-wrapper position-relative mb-4">
+                  <motion.div
+                    className="image-wrapper position-relative mb-4"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{duration:"0.9"}}
+                  >
                     <img
                       src={LoginImage}
                       alt="Login Illustration"
@@ -48,7 +53,7 @@ const LoginPage: React.FC = () => {
                         transition: "transform 0.9s ease",
                       }}
                     />
-                  </div>
+                  </motion.div>
                 </motion.div>
 
                 {/* Social Media Login Buttons */}

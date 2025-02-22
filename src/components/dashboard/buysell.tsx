@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { doc, updateDoc, arrayUnion, getDoc } from "firebase/firestore";
 import { db } from "../Login/firebase";
 import useStockData from "../hook/useStockData";
@@ -21,6 +21,8 @@ const CustomBox = () => {
     totalPL: 0,
     totalPLPercent: 0,
   });
+  const [showBuyPopup, setShowBuyPopup] = useState(false);
+  const [showSellPopup, setShowSellPopup] = useState(false);
 
   useEffect(() => {
     const fetchHoldings = async () => {
@@ -31,7 +33,6 @@ const CustomBox = () => {
           if (userSnap.exists()) {
             const data = userSnap.data();
 
-            // Fetch user holdings
             if (Array.isArray(data.purchases)) {
               const buyOrders = data.purchases.filter(
                 (p) =>
@@ -51,7 +52,6 @@ const CustomBox = () => {
               setUserHoldings(0);
             }
 
-            // Fetch equity details (adjust field name if needed)
             if (data.equityDetails) {
               setEquityDetails(data.equityDetails);
             } else {
@@ -168,6 +168,36 @@ const CustomBox = () => {
     }
   };
 
+  const handleBuyClick = () => {
+    if (selectedStock) {
+      setShowBuyPopup(true);
+    }
+  };
+
+  const closeBuyPopup = () => {
+    setShowBuyPopup(false);
+  };
+
+  const confirmBuy = async () => {
+    await handleTransaction("buy");
+    setShowBuyPopup(false);
+  };
+
+  const handleSellClick = () => {
+    if (selectedStock && userHoldings > 0) {
+      setShowSellPopup(true);
+    }
+  };
+
+  const closeSellPopup = () => {
+    setShowSellPopup(false);
+  };
+
+  const confirmSell = async () => {
+    await handleTransaction("sell");
+    setShowSellPopup(false);
+  };
+
   return (
     <div
       style={{
@@ -215,33 +245,37 @@ const CustomBox = () => {
       </motion.select>
 
       <span>
-        {stock.name}: ${stock.value}
+        {stock.name}: {stock.value}
       </span>
 
-      <motion.input
-        type="number"
-        value={quantity}
-        min="1"
-        onChange={(e) => setQuantity(Math.max(1, Number(e.target.value)))}
-        style={{
-          backgroundColor: "rgb(30, 30, 30)",
-          color: "white",
-          border: "none",
-          padding: "10px 20px",
-          marginRight: "10px",
-          borderRadius: "5px",
-          cursor: "pointer",
-          fontSize: "16px",
-          textAlign: "center",
-          width: "80px",
-        }}
-      />
+      <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+        <span style={{ fontSize: "16px", color: "white" }}>QTY:</span>
+        <motion.input
+          type="number"
+          value={quantity}
+          min="1"
+          onChange={(e) => setQuantity(Math.max(1, Number(e.target.value)))}
+          style={{
+            backgroundColor: "rgb(30, 30, 30)",
+            color: "white",
+            border: "none",
+            padding: "10px 20px",
+            borderRadius: "5px",
+            cursor: "pointer",
+            fontSize: "16px",
+            textAlign: "center",
+            width: "80px",
+          }}
+        />
+      </div>
 
       <span>Holdings: {userHoldings}</span>
 
       <div>
         <motion.button
-          onClick={() => handleTransaction("buy")}
+          whileHover={{ scale: 0.9 }}
+          whileTap={{ scale: 0.9 }}
+          onClick={handleBuyClick}
           disabled={!selectedStock}
           style={{
             backgroundColor: selectedStock ? "green" : "gray",
@@ -258,7 +292,9 @@ const CustomBox = () => {
         </motion.button>
 
         <motion.button
-          onClick={() => handleTransaction("sell")}
+          whileHover={{ scale: 0.9 }}
+          whileTap={{ scale: 0.9 }}
+          onClick={handleSellClick}
           disabled={!selectedStock || userHoldings < 1}
           style={{
             backgroundColor: selectedStock ? "red" : "gray",
@@ -274,6 +310,195 @@ const CustomBox = () => {
           Sell
         </motion.button>
       </div>
+
+      <AnimatePresence>
+        {showBuyPopup && (
+          <motion.div
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.8 }}
+            transition={{
+              type: "spring",
+              stiffness: 600,
+              damping: 20,
+              duration: 0.1,
+            }}
+            style={{
+              position: "fixed",
+              top: "30%",
+              left: "50%",
+              transform: "translate(-50%, -50%)",
+              backgroundColor: "rgb(12, 20, 70)", // slightly transparent background
+              color: "white",
+              padding: "20px",
+              borderRadius: "8px",
+              backdropFilter: "blur(10px)", // proper blur effect
+              zIndex: 1000,
+              fontFamily: "'Courier New', Courier, monospace",
+            }}
+          >
+            <h2>Confirm Buy</h2>
+            <p>Stock: {stock.name}</p>
+            <p>Price: {stock.value}</p>
+            <p>Quantity: {quantity}</p>
+            <p>Total: ${stockPrice.toFixed(2)}</p>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-around",
+                marginTop: "10px",
+              }}
+            >
+              <motion.button
+                whileHover={{ scale: 0.9 }}
+                whileTap={{ scale: 0.9 }}
+                onClick={confirmBuy}
+                style={{
+                  backgroundColor: "green",
+                  color: "white",
+                  padding: "8px 16px",
+                  borderRadius: "4px",
+                }}
+              >
+                Confirm
+              </motion.button>
+              <motion.button
+                whileHover={{ scale: 0.9 }}
+                whileTap={{ scale: 0.9 }}
+                onClick={closeBuyPopup}
+                style={{
+                  backgroundColor: "red",
+                  color: "white",
+                  padding: "8px 16px",
+                  borderRadius: "4px",
+                }}
+              >
+                Cancel
+              </motion.button>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+      {showBuyPopup && (
+        <div
+          style={{
+            position: "fixed",
+            top: 0,
+            left: 0,
+            width: "100%",
+            height: "100%",
+            backgroundColor: "rgba(0,0,0,0.5)",
+            zIndex: 999,
+          }}
+          onClick={closeBuyPopup}
+        ></div>
+      )}
+
+      <AnimatePresence>
+        {showSellPopup && (
+          <motion.div
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.8 }}
+            transition={{
+              type: "spring",
+              stiffness: 600,
+              damping: 20,
+              duration: 0.1,
+            }}
+            style={{
+              position: "fixed",
+              top: "30%",
+              left: "50%",
+              transform: "translate(-50%, -50%)",
+              backgroundColor: "rgb(12, 20, 70)", // slightly transparent background
+              color: "white",
+              padding: "20px",
+              borderRadius: "8px",
+              backdropFilter: "blur(10px)", // proper blur effect
+              zIndex: 1000,
+              fontFamily: "'Courier New', Courier, monospace",
+            }}
+          >
+            <h2>Confirm Sell</h2>
+            <p>Stock: {stock.name}</p>
+            <p>Price: {stock.value}</p>
+            <p>Holdings: {userHoldings}</p>
+            <p>
+              Quantity to Sell:
+              <input
+                type="number"
+                value={quantity}
+                min="1"
+                max={userHoldings}
+                onChange={(e) =>
+                  setQuantity(
+                    Math.min(userHoldings, Math.max(1, Number(e.target.value)))
+                  )
+                }
+                style={{
+                  backgroundColor: "rgb(50, 50, 50)",
+                  color: "white",
+                  border: "none",
+                  padding: "8px",
+                  borderRadius: "4px",
+                  marginLeft: "8px",
+                  width: "60px",
+                }}
+              />
+            </p>
+            <p>Total: ${stockPrice.toFixed(2)}</p>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-around",
+                marginTop: "10px",
+              }}
+            >
+              <motion.button
+                whileHover={{ scale: 0.9 }}
+                whileTap={{ scale: 0.9 }}
+                onClick={confirmSell}
+                style={{
+                  backgroundColor: "green",
+                  color: "white",
+                  padding: "8px 16px",
+                  borderRadius: "4px",
+                }}
+              >
+                Confirm
+              </motion.button>
+              <motion.button
+                whileHover={{ scale: 0.9 }}
+                whileTap={{ scale: 0.9 }}
+                onClick={closeSellPopup}
+                style={{
+                  backgroundColor: "red",
+                  color: "white",
+                  padding: "8px 16px",
+                  borderRadius: "4px",
+                }}
+              >
+                Cancel
+              </motion.button>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+      {showSellPopup && (
+        <div
+          style={{
+            position: "fixed",
+            top: 0,
+            left: 0,
+            width: "100%",
+            height: "100%",
+            backgroundColor: "rgba(0,0,0,0.5)",
+            zIndex: 999,
+          }}
+          onClick={closeSellPopup}
+        ></div>
+      )}
     </div>
   );
 };

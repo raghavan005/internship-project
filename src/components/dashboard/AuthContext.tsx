@@ -8,6 +8,8 @@ import {
 import { auth, db } from "../Login/firebase";
 import { onAuthStateChanged } from "firebase/auth";
 import { doc, getDoc, updateDoc, setDoc, arrayUnion } from "firebase/firestore";
+import "react-loading-skeleton/dist/skeleton.css";
+import Placeholder from "react-bootstrap/Placeholder";
 
 // Define the structure of a purchase history item
 interface PurchaseHistoryItem {
@@ -154,7 +156,15 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   };
 
   if (loading) {
-    return <div>Loading...</div>;
+    <div className="p-4">
+      <Placeholder as="p" animation="glow">
+        <Placeholder xs={6} />
+      </Placeholder>
+      <Placeholder as="p" animation="wave">
+        <Placeholder xs={12} />
+        <Placeholder xs={8} />
+      </Placeholder>
+    </div>;
   }
 
   return (

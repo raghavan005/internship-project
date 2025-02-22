@@ -56,11 +56,13 @@ const Box = () => {
         height: "392px",
         right: "20px",
         top: "39%",
+        position: "absolute", // ✅ Changed from 'fixed' to 'absolute'
         borderRadius: "8px",
         border: "none",
         transform: "translateY(-60%)",
         padding: "20px",
         boxSizing: "border-box",
+        zIndex: 1000,
       }}
     >
       <div

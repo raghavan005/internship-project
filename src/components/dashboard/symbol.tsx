@@ -13,8 +13,11 @@ function Trading() {
     widgetDiv.className = "tradingview-widget-container__widget";
     container.current.appendChild(widgetDiv);
 
+   
+
+
     // Create the script element
-    const script = document.createElement("script");
+     const script = document.createElement("script");
     script.src =
       "https://s3.tradingview.com/external-embedding/embed-widget-symbol-overview.js";
     script.type = "text/javascript";
@@ -61,7 +64,7 @@ function Trading() {
         ],
         "dateFormat": "dd MMM",
         "timeHoursFormat": "12-hours"
-      }`;
+  }`;
 
     container.current.appendChild(script);
   }, []);
