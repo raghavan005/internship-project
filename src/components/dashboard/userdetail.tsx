@@ -53,7 +53,7 @@ const Box = () => {
       style={{
         backgroundColor: "rgb(19, 23, 34)",
         width: "800px",
-        height: "392px",
+        height: "350px",
         right: "20px",
         top: "39%",
         position: "absolute", // ✅ Changed from 'fixed' to 'absolute'

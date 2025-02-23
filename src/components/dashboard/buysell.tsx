@@ -4,8 +4,13 @@ import { doc, updateDoc, arrayUnion, getDoc } from "firebase/firestore";
 import { db } from "../Login/firebase";
 import useStockData from "../hook/useStockData";
 import { useAuth } from "../dashboard/AuthContext";
+import Lottie from "lottie-react";
+import loadingAnimation from "../../assets/animation/Animation - loading.json";
+import success from "../../assets/animation/Animation -success.json";
 
 const CustomBox = () => {
+  const [showAnimation, setShowAnimation] = useState(false);
+  const [successAnimation, setSuccessAnimation] = useState(false);
   const stocks = useStockData();
   const { user, userData, updateWallet } = useAuth();
   const [selectedStock, setSelectedStock] = useState(
@@ -157,11 +162,8 @@ const CustomBox = () => {
         }),
       });
 
-      alert(
-        `${type === "buy" ? "Bought" : "Sold"} ${quantity} ${
-          stock.name
-        } for $${stockPrice.toFixed(2)}`
-      );
+      setSuccessAnimation(true);
+      setTimeout(() => setSuccessAnimation(false), 2000);
     } catch (error) {
       console.error("Error saving transaction:", error);
       alert("Error saving transaction. Please try again.");
@@ -179,8 +181,10 @@ const CustomBox = () => {
   };
 
   const confirmBuy = async () => {
+    setShowAnimation(true);
     await handleTransaction("buy");
     setShowBuyPopup(false);
+    setShowAnimation(false);
   };
 
   const handleSellClick = () => {
@@ -194,8 +198,10 @@ const CustomBox = () => {
   };
 
   const confirmSell = async () => {
+    setShowAnimation(true);
     await handleTransaction("sell");
     setShowSellPopup(false);
+    setShowAnimation(false);
   };
 
   return (
@@ -328,11 +334,11 @@ const CustomBox = () => {
               top: "30%",
               left: "50%",
               transform: "translate(-50%, -50%)",
-              backgroundColor: "rgb(12, 20, 70)", // slightly transparent background
+              backgroundColor: "rgb(12, 20, 70)",
               color: "white",
               padding: "20px",
               borderRadius: "8px",
-              backdropFilter: "blur(10px)", // proper blur effect
+              backdropFilter: "blur(10px)",
               zIndex: 1000,
               fontFamily: "'Courier New', Courier, monospace",
             }}
@@ -362,6 +368,7 @@ const CustomBox = () => {
               >
                 Confirm
               </motion.button>
+
               <motion.button
                 whileHover={{ scale: 0.9 }}
                 whileTap={{ scale: 0.9 }}
@@ -411,11 +418,11 @@ const CustomBox = () => {
               top: "30%",
               left: "50%",
               transform: "translate(-50%, -50%)",
-              backgroundColor: "rgb(12, 20, 70)", // slightly transparent background
+              backgroundColor: "rgb(12, 20, 70)",
               color: "white",
               padding: "20px",
               borderRadius: "8px",
-              backdropFilter: "blur(10px)", // proper blur effect
+              backdropFilter: "blur(10px)",
               zIndex: 1000,
               fontFamily: "'Courier New', Courier, monospace",
             }}
@@ -498,6 +505,47 @@ const CustomBox = () => {
           }}
           onClick={closeSellPopup}
         ></div>
+      )}
+
+      {showAnimation && (
+        <div
+          style={{
+            position: "fixed",
+            top: 0,
+            left: 0,
+            width: "100%",
+            height: "100%",
+            backgroundColor: "rgba(0,0,0,0.5)",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            zIndex: 1001,
+          }}
+        >
+          <Lottie
+            animationData={loadingAnimation}
+            style={{ width: 200, height: 200 }}
+          />
+        </div>
+      )}
+
+      {successAnimation && (
+        <div
+          style={{
+            position: "fixed",
+            top: 0,
+            left: 0,
+            width: "100%",
+            height: "100%",
+            backgroundColor: "rgba(0,0,0,0.5)",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            zIndex: 1002,
+          }}
+        >
+          <Lottie animationData={success} style={{ width: 200, height: 200 }} />
+        </div>
       )}
     </div>
   );

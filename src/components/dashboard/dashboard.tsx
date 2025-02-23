@@ -161,7 +161,6 @@ const UserProfileDropdown = () => {
           <p className="dropdown-item-text">{user.email || "No Email"}</p>
           <div className="dropdown-divider"></div>
           <motion.button
-           
             className="dropdown-item"
             onClick={() => navigate("/profile")}
           >
@@ -175,7 +174,12 @@ const UserProfileDropdown = () => {
           </button>
           <button
             className="dropdown-item text-danger"
-            onClick={() => navigate("/login")} // Redirect to login page
+            onClick={() => {
+              console.log("Logout button clicked");
+              setTimeout(() => {
+                navigate("/login");
+              }, 100); // Add a 100ms delay
+            }} // Redirect to login page
           >
             <LogOut size={18} className="me-1" /> Logout
           </button>
@@ -198,7 +202,7 @@ const Dashboard = () => {
           <>
             <Trading />
             <PurchaseHistory />
-            <Box />
+           
           </>
         );
       case "Watchlist":
