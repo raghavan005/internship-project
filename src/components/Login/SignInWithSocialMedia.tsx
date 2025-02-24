@@ -36,7 +36,8 @@ const containervariants ={
   },
   do:{
     type:'spring',
-    duration:0.5
+    duration:0.9,
+    stifness:3000
   }
 }
 

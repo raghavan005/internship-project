@@ -1,132 +1,126 @@
 import React, { useState, useEffect } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
-import "./Login.css";
 import LoginImage from "../../assets/images/screenshot.png";
-import SignInWithSocialMedia from "./SignInWithSocialMedia"; // Combined Google and GitHub Sign-In component import
+import SignInWithSocialMedia from "./SignInWithSocialMedia";
 import { useNavigate } from "react-router-dom";
-import { motion } from "framer-motion"; // useNavigate for redirect
+import { motion } from "framer-motion";
 
 const LoginPage: React.FC = () => {
   const [isHovered, setIsHovered] = useState(false);
-  const navigate = useNavigate(); // Initialize navigate function
+  const navigate = useNavigate();
 
   useEffect(() => {
-    // Check if the user is authenticated
-    const isAuthenticated = localStorage.getItem("isAuthenticated"); // Example of checking auth status (use your actual method)
-
-    // If the user is authenticated, redirect to dashboard
+    const isAuthenticated = localStorage.getItem("isAuthenticated");
     if (isAuthenticated === "true") {
       navigate("/dashboard");
     }
   }, [navigate]);
 
   return (
-    <motion.div>
-      <div className="login min-vh-100 d-flex align-items-center justify-content-center">
-        <div className="container position-relative">
-          <div className="row justify-content-center">
-            <div className="col-md-6 col-lg-5">
-              <div
-                className="card shadow-lg p-4 border-0"
-                style={{
-                  transform: isHovered ? "translateY(-5px)" : "translateY(0)",
-                  transition: "all 0.3s ease",
-                }}
-                onMouseEnter={() => setIsHovered(true)}
-                onMouseLeave={() => setIsHovered(false)}
-              >
-                <motion.div className="text-center">
-                  <motion.div
-                    className="image-wrapper position-relative mb-4"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{duration:"0.9"}}
-                  >
-                    <img
-                      src={LoginImage}
-                      alt="Login Illustration"
-                      className="login-image"
-                      style={{
-                        maxWidth: "300px",
-                        transform: isHovered ? "scale(1.02)" : "scale(1)",
-                        transition: "transform 0.9s ease",
-                      }}
-                    />
-                  </motion.div>
-                </motion.div>
+    <motion.div className="login-container">
+      <div className="login-wrapper">
+        {/* Left Side - Image */}
+        <motion.div
+          className="login-image-container"
+          initial={{ opacity: 0, x: -50 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ type:'spring',duration: 2,stiffness:300 }}
+        >
+          <img
+            src={LoginImage}
+            alt="Login Illustration"
+            className="login-image"
+          />
+        </motion.div>
 
-                {/* Social Media Login Buttons */}
-                <div className="text-center mt-4 mb-4">
-                  <SignInWithSocialMedia />
-                </div>
-              </div>
+        {/* Right Side - Login */}
+        <motion.div className="login-card">
+          <motion.div
+            className="card-content"
+            style={{
+              transform: isHovered ? "translateY(-5px)" : "translateY(0)",
+              transition: "all 0.3s ease",
+            }}
+            onMouseEnter={() => setIsHovered(true)}
+            onMouseLeave={() => setIsHovered(false)}
+          >
+            <h2 className="text-center">Welcome Back</h2>
+            <div className="text-center mt-4 mb-4">
+              <SignInWithSocialMedia />
             </div>
-          </div>
-        </div>
+          </motion.div>
+        </motion.div>
+      </div>
 
-        <style>
-          {`
-          .login {
-            position: relative;
-            overflow: hidden;
-            background: linear-gradient(90deg, rgba(12, 20, 69, 0.72), rgba(254, 212, 160, 0.62),rgba(105, 62, 9, 0.64));
-            background-size: 400% 400%;
-            animation: gradientShift 7s infinite ease-in-out;
-          }
-          @keyframes gradientShift {
-            0% {
-              background-position: 0% 50%;
-            }
-            50% {
-              background-position: 100% 50%;
-            }
-            100% {
-              background-position: 0% 50%;
-            }
-          }
+      <style>
+        {`
 
-          .card {
-            width: 500px; /* Increase width */
-            height: 500px; /* Increase height */
-            padding: 2rem; /* Add more padding inside */
-            background: rgba(255, 255, 255, 0.2);
-            backdrop-filter: blur(10px);
-            border-radius: 12px;
+         @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600&display=swap');
+
+          .login-container {
             display: flex;
             justify-content: center;
             align-items: center;
-            text-align: center;
+            height: 100vh;
+            background: linear-gradient(to right, #6D53DC, #DC5356);
+            background-size: 400% 400%;
+            animation: gradientShift 5s infinite ease-in-out;
+            font-family: 'Montserrat', sans-serif;
           }
 
+          @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+          }
+
+          .login-wrapper {
+            display: flex;
+            width: 80%;
+            max-width: 900px;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+          }
+
+          .login-image-container {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.1);
+          }
 
           .login-image {
+            max-width: 100%;
+            height: auto;
             border-radius: 10px;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
           }
 
-          .google-btn-wrapper,
-          .github-btn-wrapper {
-            transition: transform 0.3s ease;
+          .login-card {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
           }
 
-          .google-btn-wrapper:hover,
-          .github-btn-wrapper:hover {
-            transform: translateY(-2px);
-            filter: brightness(1.05);
+          .card-content {
+            width: 100%;
+            text-align: center;
           }
 
-          .google-btn-wrapper:active,
-          .github-btn-wrapper:active {
-            transform: translateY(0);
-          }
-
-          h2, .text-white {
-            color: white !important;
+          h2 {
+            color: white;
+            font-weight: bold;
           }
         `}
-        </style>
-      </div>
+      </style>
     </motion.div>
   );
 };

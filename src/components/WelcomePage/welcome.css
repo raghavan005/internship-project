@@ -21,10 +21,10 @@ body {
 }
 
 @keyframes backgroundSlide {
-  0%   { background-image: url('../../assets/images/bg.jpg'); }
-  33%  { background-image: url('../../assets/images/bg.jpg'); }
-  66%  { background-image: url('../../assets/images/bg.jpg'); }
-  100% { background-image: url('../../assets/images/bg.jpg'); }
+  0%   { background-image: url('../../assets/images/technology_blue_circuit_board_4k_hd_technology-3840x2160.jpg'); }
+  33%  { background-image: url('../../assets/images/technology_circuit_board_hd_technology-1920x1080.jpg'); }
+  66%  { background-image: url('../../assets/images/purple_pink_lines_circles_dots_structure_wallpaper_blur_bokeh_background_4k_hd_abstract-3840x2160.jpg'); }
+  100% { background-image: url('../../assets/images/galactic_colorful_nuclei_galaxy_space_glow_wallpaper_background_4k_hd_space-3840x2160.jpg'); }
 }
 
 /* Glassy Effect */
@@ -52,8 +52,9 @@ body {
 }
 
 .logo {
-  height: 150px;
+  height: 155px;
   object-fit: contain;
+  border-radius: 5%;
 }
 
 /* Main Content */
@@ -164,7 +165,6 @@ body {
   position: fixed;
   bottom: 2rem;
   left: 50%;
-  transform: translateX(-50%);
   padding: 1rem 2rem;
   border-radius: 2rem;
   color: white;

@@ -61,12 +61,17 @@ const SearchBox: React.FC<SearchBoxProps> = ({ apiKey }) => {
     <div className="position-relative d-flex flex-column align-items-center p-3">
       {/* Search Box */}
       <div
-        className="d-flex align-items-center w-100 rounded-pill overflow-hidden"
+        className="d-flex align-items-center w-100"
         style={{
-          border: "1px solid #ccc",
-          backgroundColor: "#333",
-          padding: "5px",
-          width: "100%", // Ensure it takes full width
+          border: "2px solid #4A4A4A",
+          backgroundColor: "rgba(255, 255, 255, 0.79)",
+          padding: "10px",
+          minWidth: "300px",
+          maxWidth: "500px",
+          width: "100%",
+          height: "50px",
+          display: "flex",
+          boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.2)",
         }}
       >
         <input
@@ -75,16 +80,37 @@ const SearchBox: React.FC<SearchBoxProps> = ({ apiKey }) => {
           placeholder="Search..."
           value={searchQuery}
           onChange={handleInputChange}
-          style={{ boxShadow: "none", width: "100%" }}
+          ref={(input) => {
+            if (input) {
+              input.style.color = "white"; // Ensures text is white
+              input.style.setProperty("--placeholder-color", "white"); // For custom CSS variables
+            }
+          }}
+          style={{
+            flex: 1,
+            border: "none",
+            fontSize: "16px",
+            outline: "none",
+            padding: "5px",
+          }}
         />
         <motion.button
-          className="btn btn-light rounded-circle ms-2 p-2"
+          className="btn btn-dark ms-2"
           onClick={fetchStockPrice}
-          whileHover={{ scale: 1.1 }}
-          whileTap={{ scale: 0.9 }}
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
           disabled={loading}
+          style={{
+            height: "40px",
+            width: "40px",
+            backgroundColor: "#555",
+            border: "none",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
         >
-          {loading ? "..." : <Search size={20} />}
+          {loading ? "..." : <Search size={20} color="white" />}
         </motion.button>
       </div>
 
@@ -94,10 +120,10 @@ const SearchBox: React.FC<SearchBoxProps> = ({ apiKey }) => {
           className="card mt-3 p-3 shadow position-absolute"
           style={{
             top: "60px",
-            width: "300px",
+            width: "320px",
             zIndex: 1000,
             backgroundColor: "#1a1b26",
-            borderRadius: "8px",
+            borderRadius: "4px",
             color: "white",
             boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.3)",
           }}

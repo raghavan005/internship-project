@@ -321,12 +321,25 @@ const Dashboard = () => {
           height: "60px",
         }}
       >
-        <div style={{ flexGrow: 1, display: "flex", justifyContent: "center" }}>
-          <SearchBox apiKey="HXYLHSGOWADTGDNR" />
+        {/* Search Box Wrapper */}
+        <div
+          style={{
+            flexGrow: 1, // Allows it to take available space
+            display: "flex",
+            justifyContent: "center",
+          }}
+        >
+          <div style={{ width: "clamp(300px, 80%, 500px)" }}>
+            <SearchBox apiKey="HXYLHSGOWADTGDNR" />
+          </div>
         </div>
+
+        {/* Wallet Dropdown */}
         <div style={{ zIndex: 2, position: "relative" }}>
           <WalletDropdown />
         </div>
+
+        {/* User Profile Dropdown */}
         <UserProfileDropdown />
       </div>
 
