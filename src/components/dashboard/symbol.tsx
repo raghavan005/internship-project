@@ -30,8 +30,8 @@ function Trading() {
           ["Microsoft", "MSFT|1D"]
         ],
         "chartOnly": false,
-        "width": "50%",
-        "height": "50%",
+        "width": "100%",
+        "height": "100%",
         "locale": "en",
         "colorTheme": "dark",
         "autosize": true,
@@ -73,7 +73,7 @@ function Trading() {
     <div
       className="tradingview-widget-container"
       ref={container}
-      style={{ height: "50%", width: "50%" }}
+      style={{ height: "100%", width: "100%" }}
     >
       <div className="tradingview-widget-container__widget"></div>
       <div className="tradingview-widget-copyright">

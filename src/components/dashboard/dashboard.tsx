@@ -5,6 +5,8 @@ import logo from "../../assets/images/screenshot.png";
 import {motion} from "framer-motion"
 import { useAuth } from "../dashboard/AuthContext"; // ✅ Import Auth Context
 import CustomBox from "./buysell"
+import Boxcontent from "./box";
+import SearchBox from "../dashboard/SearchBox"; // Adjust the path if necessary
 import {
   TrendingUp,
   Briefcase,
@@ -23,6 +25,7 @@ import "./dashboard.css";
 import Trading from "./symbol";
 import PurchaseHistory from "./PurchaseHistory"
 import Box from "./userdetail";
+import  MutualFundsDashboard from "../dashboard/mutualfuns/mutualfunds"
 
 
 
@@ -123,11 +126,11 @@ const WalletDropdown = () => {
 
 // ✅ User Profile Drop-down Component
 const UserProfileDropdown = () => {
-  const { user } = useAuth(); // ✅ Fetch user
+  const { user } = useAuth();
   const navigate = useNavigate();
   const [showDropdown, setShowDropdown] = useState(false);
 
-  if (!user) return null; // ✅ Hide dropdown if no user is logged in
+  if (!user) return null;
 
   return (
     <div
@@ -143,8 +146,23 @@ const UserProfileDropdown = () => {
         onClick={() => setShowDropdown(!showDropdown)}
         aria-haspopup="true"
         aria-expanded={showDropdown}
+        style={{ display: "flex", alignItems: "center" }} // Align icon and name/picture
       >
-        <User size={24} style={{ marginRight: "8px" }} />
+        {user.profilePicture ? (
+          <img
+            src={user.profilePicture} // Assuming your user object has profilePicture URL
+            alt="Profile"
+            style={{
+              width: "24px",
+              height: "24px",
+              borderRadius: "50%",
+              marginRight: "8px",
+              objectFit: "cover", // ensures the image fits within the bounds
+            }}
+          />
+        ) : (
+          <User size={24} style={{ marginRight: "8px" }} /> // Fallback if no profile picture
+        )}
         {user.displayName || "User"}
       </motion.button>
 
@@ -157,7 +175,26 @@ const UserProfileDropdown = () => {
           className="dropdown-menu dropdown-menu-right"
           style={{ display: "block" }}
         >
-          <h6 className="dropdown-header">{user.displayName || "User"}</h6>
+          <div
+            style={{ display: "flex", alignItems: "center", padding: "8px" }}
+          >
+            {user.profilePicture ? (
+              <img
+                src={user.profilePicture} // Assuming your user object has profilePicture URL
+                alt="Profile"
+                style={{
+                  width: "30px",
+                  height: "30px",
+                  borderRadius: "50%",
+                  marginRight: "8px",
+                  objectFit: "cover",
+                }}
+              />
+            ) : (
+              <User size={30} style={{ marginRight: "8px" }} /> // Fallback if no profile picture
+            )}
+            <h6 className="dropdown-header">{user.displayName || "User"}</h6>
+          </div>
           <p className="dropdown-item-text">{user.email || "No Email"}</p>
           <div className="dropdown-divider"></div>
           <motion.button
@@ -178,8 +215,8 @@ const UserProfileDropdown = () => {
               console.log("Logout button clicked");
               setTimeout(() => {
                 navigate("/login");
-              }, 100); // Add a 100ms delay
-            }} // Redirect to login page
+              }, 100);
+            }}
           >
             <LogOut size={18} className="me-1" /> Logout
           </button>
@@ -188,6 +225,7 @@ const UserProfileDropdown = () => {
     </div>
   );
 };
+
 
 // ✅ Dashboard Component
 const Dashboard = () => {
@@ -200,9 +238,29 @@ const Dashboard = () => {
       case "Dashboard":
         return (
           <>
-            <Trading />
-            <PurchaseHistory />
-           
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                height: "100vh",
+                padding: "20px",
+              }}
+            >
+              {/* Top Section - Trading & Boxcontent */}
+              <div style={{ display: "flex", flex: 1, gap: "20px" }}>
+                <div style={{ flex: 1 }}>
+                  <Trading />
+                </div>
+                <div style={{ flex: 1 }}>
+                  <Boxcontent />
+                </div>
+              </div>
+
+              {/* Bottom Section - Purchase History */}
+              <div style={{ flex: 1 }}>
+                <PurchaseHistory />
+              </div>
+            </div>
           </>
         );
       case "Watchlist":
@@ -213,7 +271,11 @@ const Dashboard = () => {
           </>
         );
       case "Mutual Funds":
-        return <h2>💰 Mutual Funds Content</h2>;
+        return(
+          <>
+          <MutualFundsDashboard />
+          </>
+        );
       case "Portfolio":
         return <h2>📂 Portfolio Content</h2>;
       case "Reports":
@@ -224,6 +286,7 @@ const Dashboard = () => {
   }, [activePage]);
 
   const memoizedStocks = useMemo(() => stocks || [], [stocks]);
+  
 
   return (
     <div className="dashboard-container">
@@ -249,8 +312,21 @@ const Dashboard = () => {
       </div>
 
       {/* ✅ User Profile & Wallet Navbar */}
-      <div className="user-navbar">
-        <WalletDropdown />
+      <div
+        className="user-navbar"
+        style={{
+          display: "flex",
+          alignItems: "center",
+          padding: "5px 10px",
+          height: "60px",
+        }}
+      >
+        <div style={{ flexGrow: 1, display: "flex", justifyContent: "center" }}>
+          <SearchBox apiKey="HXYLHSGOWADTGDNR" />
+        </div>
+        <div style={{ zIndex: 2, position: "relative" }}>
+          <WalletDropdown />
+        </div>
         <UserProfileDropdown />
       </div>
 

@@ -1,128 +1,171 @@
 import React, { useEffect, useState } from "react";
-import { db } from "../Login/firebase";
-import { collection, getDocs, query, where } from "firebase/firestore";
 import { useAuth } from "../dashboard/AuthContext";
+import { db } from "../Login/firebase";
+import { doc, onSnapshot } from "firebase/firestore";
 
-interface HoldingsData {
-  invested: number;
-  current: number;
-  todayPL: number;
-  todayPLPercent: number;
-  totalPL: number;
-  totalPLPercent: number;
+interface PurchaseEntry {
+  stock: string;
+  type: "buy" | "sell";
+  quantity: number;
+  price: string;
+  date: string;
 }
 
-const Box = () => {
+const PurchaseHistory: React.FC = () => {
   const { user } = useAuth();
-  const [holdings, setHoldings] = useState<HoldingsData | null>(null);
+  const [purchaseHistory, setPurchaseHistory] = useState<PurchaseEntry[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [holdings, setHoldings] = useState<{ [stock: string]: number }>({}); // Track holdings
 
   useEffect(() => {
-    const fetchHoldings = async () => {
-      if (!user) {
-        setLoading(false);
-        return;
-      }
+    if (!user) {
+      setError("User not logged in.");
+      setLoading(false);
+      return;
+    }
 
-      try {
-        const holdingsRef = collection(db, "holdings");
-        const q = query(holdingsRef, where("userId", "==", user.uid));
-        const snapshot = await getDocs(q);
+    const userRef = doc(db, "users", user.uid);
 
-        if (!snapshot.empty) {
-          const data = snapshot.docs.map((doc) =>
-            doc.data()
-          )[0] as HoldingsData;
-          setHoldings(data);
+    const unsubscribe = onSnapshot(
+      userRef,
+      (docSnapshot) => {
+        if (docSnapshot.exists()) {
+          const data = docSnapshot.data();
+
+          if (Array.isArray(data.purchases)) {
+            const filteredPurchases = data.purchases.filter(
+              (entry) =>
+                entry.stock !== "" &&
+                entry.type !== "" &&
+                entry.quantity !== "" &&
+                entry.price !== "" &&
+                entry.date !== ""
+            );
+            setPurchaseHistory(filteredPurchases);
+
+            // Calculate holdings
+            const newHoldings: { [stock: string]: number } = {};
+            filteredPurchases.forEach((entry) => {
+              const stock = entry.stock;
+              if (!newHoldings[stock]) {
+                newHoldings[stock] = 0;
+              }
+              if (entry.type === "buy") {
+                newHoldings[stock] += entry.quantity;
+              } else if (entry.type === "sell") {
+                newHoldings[stock] -= entry.quantity;
+              }
+            });
+            setHoldings(newHoldings);
+          } else {
+            setPurchaseHistory([]);
+            setHoldings({});
+          }
         } else {
-          setHoldings(null);
+          setError("No purchase history found.");
+          setHoldings({});
         }
-      } catch (error) {
-        console.error("Error fetching holdings:", error);
-      } finally {
+        setLoading(false);
+      },
+      (err) => {
+        console.error("Error fetching purchase history:", err);
+        setError("Error loading purchase history.");
         setLoading(false);
       }
-    };
+    );
 
-    fetchHoldings();
+    return () => unsubscribe();
   }, [user]);
 
   return (
-    <div
-      className="d-flex flex-column align-items-center position-absolute"
-      style={{
-        backgroundColor: "rgb(19, 23, 34)",
-        width: "800px",
-        height: "350px",
-        right: "20px",
-        top: "39%",
-        position: "absolute", // ✅ Changed from 'fixed' to 'absolute'
-        borderRadius: "8px",
-        border: "none",
-        transform: "translateY(-60%)",
-        padding: "20px",
-        boxSizing: "border-box",
-        zIndex: 1000,
-      }}
-    >
-      <div
-        className="w-100"
-        style={{
-          backgroundColor: "black",
-          borderRadius: "8px",
-          padding: "20px",
-          boxSizing: "border-box",
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "space-between",
-          height: "calc(100% - 15px)",
-        }}
-      >
-        <div className="d-flex justify-content-between align-items-center">
-          <h5>Equity</h5>
-          <a href="#" className="text-primary text-decoration-none">
-            Details
-          </a>
-        </div>
-        {loading ? (
-          <p className="text-white text-center">Loading...</p>
-        ) : holdings ? (
-          <div className="d-flex justify-content-between">
-            <div>
-              <small>Invested</small>
-              <h6 className="fw-bold">{holdings.invested.toFixed(2)}</h6>
-            </div>
-            <div>
-              <small>Current</small>
-              <h6 className="fw-bold">{holdings.current.toFixed(2)}</h6>
-            </div>
-            <div className="text-right">
-              <small>Today's P&L</small>
-              <h6
-                className={
-                  holdings.todayPL >= 0 ? "text-success" : "text-danger"
-                }
+    <div style={containerStyle}>
+      <h2 style={headingStyle}>Purchase History</h2>
+
+      {loading ? (
+        <p>Loading...</p>
+      ) : error ? (
+        <p style={{ color: "red" }}>{error}</p>
+      ) : purchaseHistory.length === 0 ? (
+        <p>No purchase history available.</p>
+      ) : (
+        <table style={tableStyle}>
+          <thead>
+            <tr style={tableHeaderStyle}>
+              <th style={thStyle}>Stock</th>
+              <th style={thStyle}>Type</th>
+              <th style={thStyle}>Quantity</th>
+              <th style={thStyle}>Price</th>
+              <th style={thStyle}>Date</th>
+              <th style={thStyle}>Holdings</th>
+            </tr>
+          </thead>
+          <tbody>
+            {purchaseHistory.map((entry, index) => (
+              <tr
+                key={index}
+                style={index % 2 === 0 ? rowStyle : alternateRowStyle}
               >
-                {holdings.todayPL.toFixed(2)} (
-                {holdings.todayPLPercent.toFixed(2)}%)
-              </h6>
-              <small>Total P&L</small>
-              <h6
-                className={
-                  holdings.totalPL >= 0 ? "text-success" : "text-danger"
-                }
-              >
-                {holdings.totalPL.toFixed(2)} (
-                {holdings.totalPLPercent.toFixed(2)}%)
-              </h6>
-            </div>
-          </div>
-        ) : (
-          <p className="text-white text-center">No holdings found</p>
-        )}
-      </div>
+                <td style={tdStyle}>{entry.stock}</td>
+                <td
+                  style={{
+                    ...tdStyle,
+                    color: entry.type === "buy" ? "green" : "red",
+                  }}
+                >
+                  {entry.type.toUpperCase()}
+                </td>
+                <td style={tdStyle}>{entry.quantity}</td>
+                <td style={tdStyle}>${entry.price}</td>
+                <td style={tdStyle}>{new Date(entry.date).toLocaleString()}</td>
+                <td style={tdStyle}>{holdings[entry.stock] || 0}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      )}
     </div>
   );
 };
 
-export default Box;
+// Styles (same as before)
+const containerStyle: React.CSSProperties = {
+  padding: "20px",
+  color: "white",
+  textAlign: "center",
+};
+
+const headingStyle: React.CSSProperties = {
+  marginBottom: "15px",
+};
+
+const tableStyle: React.CSSProperties = {
+  width: "100%",
+  borderCollapse: "collapse",
+  backgroundColor: "rgb(30, 30, 30)",
+};
+
+const tableHeaderStyle: React.CSSProperties = {
+  backgroundColor: "rgb(50, 50, 50)",
+  color: "white",
+};
+
+const thStyle: React.CSSProperties = {
+  padding: "10px",
+  borderBottom: "2px solid #ddd",
+};
+
+const tdStyle: React.CSSProperties = {
+  padding: "10px",
+  textAlign: "center",
+};
+
+const rowStyle: React.CSSProperties = {
+  backgroundColor: "rgb(20, 20, 20)",
+};
+
+const alternateRowStyle: React.CSSProperties = {
+  backgroundColor: "rgb(15, 15, 15)",
+};
+
+export default PurchaseHistory;
