@@ -7,7 +7,7 @@ import Lottie from "lottie-react";
 import { useAuth } from "../AuthContext"; // Import your AuthContext
 import processingAnimation from "../../../assets/animation/Animation - loading.json"; // Replace with your file path
 import successAnimation from "../../../assets/animation/Animation -success.json"; // Replace with your file path
-
+import Display from "./display"
 
 
 Modal.setAppElement("#root");
@@ -352,21 +352,38 @@ const MutualFundsDashboard = () => {
               <p style={styles.finalAmount}>Final Amount: ₹{finalAmount}</p>
             )}
 
-            {/* Lottie Animations Added Here */}
             {isProcessing && (
-              <Lottie
-                animationData={processingOptions.animationData}
-                height={150}
-                width={150}
-              />
+              <div
+                style={{
+                  position: "absolute",
+                  top: "50%",
+                  left: "50%",
+                  transform: "translate(-50%, -50%)",
+                }}
+              >
+                <Lottie
+                  animationData={processingOptions.animationData}
+                  height={150}
+                  width={150}
+                />
+              </div>
             )}
 
             {isSuccess && (
-              <Lottie
-                animationData={successOptions.animationData}
-                height={150}
-                width={150}
-              />
+              <div
+                style={{
+                  position: "absolute",
+                  top: "50%",
+                  left: "50%",
+                  transform: "translate(-50%, -50%)",
+                }}
+              >
+                <Lottie
+                  animationData={successOptions.animationData}
+                  height={150}
+                  width={150}
+                />
+              </div>
             )}
             {/* Conditional Rendering of Buttons */}
             {!isProcessing && !isSuccess && (

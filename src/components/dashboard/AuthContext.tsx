@@ -5,7 +5,7 @@ import {
   useState,
   ReactNode,
 } from "react";
-import { auth, db } from "../Login/firebase"; // Adjust path as needed
+import { auth, db } from "../Login/firebase";
 import { onAuthStateChanged } from "firebase/auth";
 import {
   doc,
@@ -21,6 +21,7 @@ import {
   deleteDoc,
 } from "firebase/firestore";
 
+// Stock Transaction Interface
 interface PurchaseHistoryItem {
   stock: string;
   type: "buy" | "sell";
@@ -29,16 +30,20 @@ interface PurchaseHistoryItem {
   brokerageFee: string;
   totalAmount: string;
   date: string;
+  investmentType: "stock"; // Explicitly defining investment type
 }
 
+// Mutual Fund Investment Interface
 interface MutualFundInvestment {
   id?: string;
   fundName: string;
   amount: string;
   duration: number;
   date: string;
+  investmentType: "mutualFund"; // Explicitly defining investment type
 }
 
+// Auth Context Type
 interface AuthContextType {
   user: any | null;
   userData: {
@@ -94,18 +99,21 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
           if (userSnap.exists()) {
             const data = userSnap.data();
+            // Ensure only stock transactions are stored
+            const filteredStocks = (data.purchaseHistory || []).filter(
+              (item: any) => item.investmentType === "stock"
+            );
+
             setUserData({
               walletAmount: data.walletAmount ?? 0,
-              purchaseHistory: Array.isArray(data.purchaseHistory)
-                ? data.purchaseHistory
-                : [],
+              purchaseHistory: filteredStocks,
             });
           } else {
             await setDoc(userRef, { walletAmount: 0, purchaseHistory: [] });
             setUserData({ walletAmount: 0, purchaseHistory: [] });
           }
 
-          // Fetch user's mutual fund investments
+          // Fetch Mutual Funds Separately
           await getUserMutualFunds();
         } catch (error) {
           console.error("Error fetching/creating user data:", error);
@@ -152,6 +160,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     if (!user) return;
 
     const userRef = doc(db, "users", user.uid);
+    const totalAmount = price + brokerageFee; // Calculate total amount
 
     const transaction: PurchaseHistoryItem = {
       stock,
@@ -159,8 +168,9 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       quantity,
       price: price.toFixed(2),
       brokerageFee: brokerageFee.toFixed(2),
-      totalAmount: (price + brokerageFee).toFixed(2),
+      totalAmount: totalAmount.toFixed(2),
       date: new Date().toISOString(),
+      investmentType: "stock", // Explicitly setting type to stock
     };
 
     try {
@@ -173,6 +183,11 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
           ? { ...prev, purchaseHistory: [...prev.purchaseHistory, transaction] }
           : null
       );
+
+      // Deduct from wallet if it's a "buy" transaction
+      if (type === "buy") {
+        await updateWallet(-totalAmount);
+      }
     } catch (error) {
       console.error("Error recording transaction:", error);
     }
@@ -193,6 +208,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       amount: amount.toFixed(2),
       duration,
       date: new Date().toISOString(),
+      investmentType: "mutualFund",
     };
 
     try {
@@ -201,13 +217,14 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         ...investment,
       });
 
-      setMutualFundInvestments((prev) => [...prev, investment]);
+      await updateWallet(-amount);
+      await getUserMutualFunds(); // Refetch updated investments
     } catch (error) {
       console.error("Error recording mutual fund investment:", error);
     }
   };
 
-  // Function to fetch all mutual fund investments for a user
+  // Function to fetch all mutual fund investments
   const getUserMutualFunds = async () => {
     if (!user) return;
 

@@ -1,12 +1,13 @@
-import React, { useState, useCallback, useMemo,useEffect } from "react";
+import React, { useState, useCallback, useMemo, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import logo from "../../assets/images/screenshot.png";
-import {motion} from "framer-motion"
+import { motion } from "framer-motion";
 import { useAuth } from "../dashboard/AuthContext"; // ✅ Import Auth Context
-import CustomBox from "./buysell"
+import CustomBox from "./buysell";
 import Boxcontent from "./box";
 import SearchBox from "../dashboard/SearchBox"; // Adjust the path if necessary
+import Portfolio from "../dashboard/portfolio/data";
 import {
   TrendingUp,
   Briefcase,
@@ -23,11 +24,8 @@ import useStockData from "../hook/useStockData";
 import Chart from "./chart";
 import "./dashboard.css";
 import Trading from "./symbol";
-import PurchaseHistory from "./PurchaseHistory"
-import Box from "./userdetail";
-import  MutualFundsDashboard from "../dashboard/mutualfuns/mutualfunds"
-
-
+import PurchaseHistory from "./PurchaseHistory";
+import MutualFundsDashboard from "../dashboard/mutualfuns/mutualfunds";
 
 const menuItems = [
   { name: "Dashboard", icon: <TrendingUp size={20} /> },
@@ -120,9 +118,6 @@ const WalletDropdown = () => {
     </div>
   );
 };
-
-
-
 
 // ✅ User Profile Drop-down Component
 const UserProfileDropdown = () => {
@@ -226,7 +221,6 @@ const UserProfileDropdown = () => {
   );
 };
 
-
 // ✅ Dashboard Component
 const Dashboard = () => {
   const [activePage, setActivePage] = useState("Dashboard");
@@ -271,13 +265,17 @@ const Dashboard = () => {
           </>
         );
       case "Mutual Funds":
-        return(
+        return (
           <>
-          <MutualFundsDashboard />
+            <MutualFundsDashboard />
           </>
         );
       case "Portfolio":
-        return <h2>📂 Portfolio Content</h2>;
+        return (
+          <>
+            <Portfolio />
+          </>
+        );
       case "Reports":
         return <h2>📑 Reports Content</h2>;
       default:
@@ -286,7 +284,6 @@ const Dashboard = () => {
   }, [activePage]);
 
   const memoizedStocks = useMemo(() => stocks || [], [stocks]);
-  
 
   return (
     <div className="dashboard-container">

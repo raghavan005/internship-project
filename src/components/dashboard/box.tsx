@@ -6,6 +6,99 @@ import img from "../../assets/images/1200x630wa.png";
 import { motion } from "framer-motion";
 import apple from "../../assets/images/8ed3d547-94ff-48e1-9f20-8c14a7030a02_2000x2000.jpg";
 import micro from "../../assets/images/microsoft-logo-icon-editorial-free-vector.jpg";
+import Display from "../dashboard/mutualfuns/display";
+
+interface MutualFund {
+  fundName: string;
+  quantity: number;
+  purchasePrice: number;
+}
+
+
+const MutualFundHoldings = () => {
+  const { user } = useAuth();
+  const [mutualFundHoldings, setMutualFundHoldings] = useState<MutualFund[]>(
+    []
+  );
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!user) return;
+
+    const userRef = doc(db, "users", user.uid);
+
+    const unsubscribe = onSnapshot(
+      userRef,
+      (docSnap) => {
+        if (docSnap.exists()) {
+          const data = docSnap.data();
+          if (Array.isArray(data.mutualFunds)) {
+            setMutualFundHoldings(data.mutualFunds);
+          } else {
+            setMutualFundHoldings([]);
+          }
+        } else {
+          setMutualFundHoldings([]);
+        }
+        setLoading(false);
+      },
+      (error) => {
+        console.error("Error fetching mutual fund data:", error);
+        setError("Failed to load mutual fund holdings.");
+        setLoading(false);
+      }
+    );
+
+    return () => unsubscribe();
+  }, [user]);
+
+  if (loading) return <p>Loading mutual fund data...</p>;
+  if (error) return <p style={{ color: "red" }}>{error}</p>;
+  if (mutualFundHoldings.length === 0) return <p>No mutual funds available.</p>;
+  return (
+    <motion.div
+      style={{
+        padding: "20px",
+        borderRadius: "10px",
+        backgroundColor: "#f8f9fa",
+        boxShadow: "0 4px 10px rgba(0, 0, 0, 0.1)",
+        width: "300px",
+        margin: "20px auto",
+      }}
+      whileHover={{ boxShadow: "0 6px 16px rgba(0, 0, 0, 0.3)" }}
+      transition={{ duration: 0.3, ease: "easeInOut" }}
+    >
+      <h2 style={{ textAlign: "center", marginBottom: "10px" }}>
+        Mutual Fund Holdings
+      </h2>
+      {mutualFundHoldings.map((fund, index) => (
+        <motion.div
+          key={index}
+          style={{
+            padding: "10px",
+            border: "1px solid #ddd",
+            borderRadius: "8px",
+            marginBottom: "8px",
+            backgroundColor: "#fff",
+          }}
+          whileHover={{
+            translateY: -3,
+            boxShadow: "0 4px 10px rgba(0, 0, 0, 0.2)",
+          }}
+          transition={{ duration: 0.2, ease: "easeInOut" }}
+        >
+          <div style={{ textAlign: "center" }}>
+            <p style={{ fontWeight: "bold" }}>{fund.fundName}</p>
+            <p>Quantity: {fund.quantity}</p>
+            <p>Purchase Price: ${fund.purchasePrice}</p>
+          </div>
+        </motion.div>
+      ))}
+    </motion.div>
+  );
+};
+
 const Holdings = () => {
   const { user } = useAuth();
   const [holdings, setHoldings] = useState<{ [stock: string]: number }>({});
@@ -14,6 +107,7 @@ const Holdings = () => {
   );
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  
 
   const API_KEY = "cuqpds1r01qhaag2qr4gcuqpds1r01qhaag2qr50"; // Finnhub API Key
 
@@ -91,6 +185,7 @@ const Holdings = () => {
       fetchStockPrices();
     }
   }, [holdings]);
+  
 
   // Function to get stock logos
   const getStockImage = (stockName: string): string => {
@@ -111,8 +206,10 @@ const Holdings = () => {
     textTransform: "uppercase",
     letterSpacing: "1px",
   };
+  
 
   return (
+    
     <motion.div
       style={boxStyle}
       whileHover={{ boxShadow: "0 6px 16px rgba(0, 0, 0, 0.3)" }}
@@ -160,11 +257,14 @@ const Holdings = () => {
                 </div>
               </motion.div>
             );
+            
           })}
+          
         </div>
       )}
     </motion.div>
   );
+  
 };
 
 const boxStyle: React.CSSProperties = {
