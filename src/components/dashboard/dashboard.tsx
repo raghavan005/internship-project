@@ -7,7 +7,7 @@ import { useAuth } from "../dashboard/AuthContext"; // ✅ Import Auth Context
 import CustomBox from "./buysell";
 import Boxcontent from "./box";
 import SearchBox from "../dashboard/SearchBox"; // Adjust the path if necessary
-import Portfolio from "../dashboard/portfolio/data";
+import Portfolio from "./portfolio/portfoliodata";
 import {
   TrendingUp,
   Briefcase,

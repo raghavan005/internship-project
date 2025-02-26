@@ -6,7 +6,6 @@ import img from "../../assets/images/1200x630wa.png";
 import { motion } from "framer-motion";
 import apple from "../../assets/images/8ed3d547-94ff-48e1-9f20-8c14a7030a02_2000x2000.jpg";
 import micro from "../../assets/images/microsoft-logo-icon-editorial-free-vector.jpg";
-import Display from "../dashboard/mutualfuns/display";
 
 interface MutualFund {
   fundName: string;

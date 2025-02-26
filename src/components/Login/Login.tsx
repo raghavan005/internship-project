@@ -24,7 +24,7 @@ const LoginPage: React.FC = () => {
         <motion.div
           className="login-image-container"
           initial={{ opacity: 0, x: -50 }}
-          animate={{ opacity: 1, x: 0 }}
+          animate={{ opacity: 1, x: 1 }}
           transition={{ type:'spring',duration: 2,stiffness:300 }}
         >
           <img
