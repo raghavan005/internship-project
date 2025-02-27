@@ -2,16 +2,23 @@ import React, { useEffect } from "react";
 import { useAuth } from "../AuthContext";
 import useStockHoldings from "./Holdings";
 import { PieChart, Pie, Cell, Tooltip, Legend } from "recharts";
+import { useBondHoldings } from "../bonds/bondholdings";
 
 const Portfolio: React.FC = () => {
   const { userData, mutualFundInvestments, user } = useAuth();
   const { stockHoldings, loading, error } = useStockHoldings();
+  const {
+    bondHoldings,
+    loading: bondLoading,
+    error: bondError,
+  } = useBondHoldings(user?.uid);
 
   useEffect(() => {
     console.log("User:", user);
     console.log("UserData:", userData);
     console.log("MutualFundInvestments:", mutualFundInvestments);
-  }, [user, userData, mutualFundInvestments]);
+     console.log("Fetched Bond Data:", bondHoldings);
+  }, [user, userData, mutualFundInvestments,bondHoldings]);
 
   if (!user) {
     return (
@@ -37,7 +44,14 @@ const Portfolio: React.FC = () => {
     (total, investment) => total + Number(investment.amount),
     0
   );
-  const totalInvestment = totalStockInvestment + totalMutualFundInvestment;
+
+  const totalBondInvestment = bondHoldings.reduce(
+    (total, holding) => total + holding.investment,
+    0
+  );
+
+  const totalInvestment =
+    totalStockInvestment + totalMutualFundInvestment + totalBondInvestment;
   const totalPortfolioValue = totalInvestment + userData.walletAmount;
 
   const stockPercentage =
@@ -48,16 +62,21 @@ const Portfolio: React.FC = () => {
     totalInvestment > 0
       ? ((totalMutualFundInvestment / totalInvestment) * 100).toFixed(1)
       : 0;
+  const bondPercentage =
+    totalInvestment > 0
+      ? ((totalBondInvestment / totalInvestment) * 100).toFixed(1)
+      : 0;
 
   const pieChartData =
     totalInvestment > 0
       ? [
           { name: "Stocks", value: Number(stockPercentage) },
           { name: "Mutual Funds", value: Number(mutualFundPercentage) },
+          { name: "Bonds", value: Number(bondPercentage) },
         ]
       : [];
 
-  const COLORS = ["#007bff", "#28a745"];
+  const COLORS = ["#007bff", "#28a745", "#FFC300"];
 
   return (
     <div
@@ -69,7 +88,6 @@ const Portfolio: React.FC = () => {
         color: "white",
       }}
     >
-      {/* Investment Breakdown */}
       <div
         style={{
           display: "flex",
@@ -119,8 +137,6 @@ const Portfolio: React.FC = () => {
             <p style={{ color: "gray" }}>No investments to display.</p>
           )}
         </div>
-
-        {/* Wallet & Portfolio Summary */}
         <div
           style={{
             flex: "1",
@@ -145,16 +161,18 @@ const Portfolio: React.FC = () => {
           <h5 style={{ color: "lightblue" }}>
             ${totalStockInvestment.toFixed(2)}
           </h5>
-
           <h4>📊 Mutual Fund Investment</h4>
           <h5 style={{ color: "lightcoral" }}>
             ${totalMutualFundInvestment.toFixed(2)}
           </h5>
 
+          <h4>🏦 Bond Investment</h4>
+          <h5 style={{ color: "#FFC300" }}>
+            ${totalBondInvestment.toFixed(2)}
+          </h5>
           <hr
             style={{ width: "50%", margin: "10px auto", borderColor: "#555" }}
           />
-
           <h4>💼 Portfolio Value</h4>
           <h5 style={{ color: "white" }}>${totalPortfolioValue.toFixed(2)}</h5>
 
@@ -176,8 +194,6 @@ const Portfolio: React.FC = () => {
           </h5>
         </div>
       </div>
-
-      {/* Stock Holdings */}
       <div
         style={{
           padding: "20px",
@@ -224,8 +240,6 @@ const Portfolio: React.FC = () => {
           </table>
         )}
       </div>
-
-      {/* Mutual Fund Investments */}
       <div
         style={{
           padding: "20px",
@@ -259,6 +273,55 @@ const Portfolio: React.FC = () => {
           </table>
         ) : (
           <p style={{ color: "gray" }}>No mutual fund investments available.</p>
+        )}
+      </div>
+
+      <div
+        style={{
+          padding: "20px",
+          border: "2px solid #444",
+          borderRadius: "10px",
+          backgroundColor: "#222",
+          marginTop: "20px",
+        }}
+      >
+        <h2>🏦 Bond Holdings</h2>
+        {bondLoading ? (
+          <p>Loading bond data...</p>
+        ) : bondError ? (
+          <p style={{ color: "red" }}>{bondError}</p>
+        ) : bondHoldings.length === 0 ? (
+          <p style={{ color: "gray" }}>No bond holdings available.</p>
+        ) : (
+          <table
+            style={{
+              width: "100%",
+              borderCollapse: "collapse",
+              textAlign: "center",
+              marginTop: "10px",
+            }}
+          >
+            <thead>
+              <tr>
+                <th>Bond Name</th>
+                <th>Investment ($)</th>
+                <th>Profit ($)</th>
+                <th>Total Return ($)</th>
+                <th>Purchase Date</th>
+              </tr>
+            </thead>
+            <tbody>
+              {bondHoldings.map((holding, index) => (
+                <tr key={index}>
+                  <td>{holding.bondName}</td>
+                  <td>${holding.investment.toFixed(2)}</td>
+                  <td>${holding.profit.toFixed(2)}</td>
+                  <td>${holding.totalReturn.toFixed(2)}</td>
+                  <td>{holding.purchaseDate.toLocaleDateString()}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         )}
       </div>
     </div>
