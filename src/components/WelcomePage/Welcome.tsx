@@ -6,6 +6,7 @@ import "./welcome.css";
 import logo from "../../assets/images/screenshot.png";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
+import LetterGlitch from "./animation/letterglitch";
 
 // Container animation with stagger for child elements
 const containerVariants = {
@@ -80,11 +81,31 @@ function Welcome() {
       initial="hidden"
       animate="visible"
     >
-      {/* Background with motion (cycling images) */}
-      <div className="background-motion"></div>
+      {/* LetterGlitch Background - Full Screen */}
+      <div
+        style={{
+          position: "fixed",
+          top: 0,
+          left: 0,
+          width: "100vw",
+          height: "100vh",
+          zIndex: -1,
+        }}
+      >
+        <LetterGlitch
+          glitchSpeed={50}
+          centerVignette={true}
+          outerVignette={false}
+          smooth={true}
+          glitchColors={["red", "blue", "green"]} // Provide the glitchColors prop
+        />
+      </div>
 
       {/* Header with glassy finish */}
-      <header className="header glass">
+      <header
+        className="header glass"
+        style={{ position: "relative", zIndex: 1 }}
+      >
         <motion.img
           src={logo}
           alt="Providence Trade Logo"
@@ -93,7 +114,10 @@ function Welcome() {
         />
       </header>
 
-      <main className="container-fluid">
+      <main
+        className="container-fluid"
+        style={{ position: "relative", zIndex: 1 }}
+      >
         <div className="row content-row">
           {/* Video Section */}
           <div className="col-md-5 video-section">
@@ -183,6 +207,13 @@ function Welcome() {
         whileHover="hover"
         whileTap="tap"
         onClick={() => navigate("/login")}
+        style={{
+          position: "fixed",
+          bottom: "2rem",
+          left: "50%",
+          transform: "translateX(-50%)",
+          zIndex: 1,
+        }}
       >
         Get Started
       </motion.button>

@@ -7,7 +7,7 @@ body {
   overflow-x: hidden;
 }
 
-/* Background Motion: Cycling through images with a 15-sec cycle */
+/* Background Image */
 .background-motion {
   position: fixed;
   top: 0;
@@ -15,16 +15,9 @@ body {
   width: 100%;
   height: 100%;
   z-index: -2;
+  background-image: url('../../assets/images/galactic_colorful_nuclei_galaxy_space_glow_wallpaper_background_4k_hd_space-3840x2160.jpg');
   background-size: cover;
   background-position: center;
-  animation: backgroundSlide 15s infinite;
-}
-
-@keyframes backgroundSlide {
-  0%   { background-image: url('../../assets/images/technology_blue_circuit_board_4k_hd_technology-3840x2160.jpg'); }
-  33%  { background-image: url('../../assets/images/technology_circuit_board_hd_technology-1920x1080.jpg'); }
-  66%  { background-image: url('../../assets/images/purple_pink_lines_circles_dots_structure_wallpaper_blur_bokeh_background_4k_hd_abstract-3840x2160.jpg'); }
-  100% { background-image: url('../../assets/images/galactic_colorful_nuclei_galaxy_space_glow_wallpaper_background_4k_hd_space-3840x2160.jpg'); }
 }
 
 /* Glassy Effect */
@@ -40,6 +33,7 @@ body {
   position: relative;
   min-height: 100vh;
   padding-bottom: 4rem;
+  z-index: 0; /* Ensure it's above the glitch-background */
 }
 
 /* Header */
@@ -49,6 +43,7 @@ body {
   position: absolute;
   top: 0;
   width: 100%;
+  z-index: 1; /* Ensure it's above the glitch-background */
 }
 
 .logo {
@@ -63,6 +58,7 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
+  z-index: 1; /* Ensure it's above the glitch-background */
 }
 
 /* Row */
@@ -82,11 +78,9 @@ body {
 }
 
 .video-container {
-  position: relative;
-  width: 100%;
-  max-width: 600px;
-  border-radius: 12px;
-  overflow: hidden;
+  display: flex;
+  justify-content: center; /* Horizontally center the video */
+  align-items: center; /* Vertically center the video */
 }
 
 .video {
@@ -172,7 +166,7 @@ body {
   font-weight: bold;
   border: none;
   cursor: pointer;
-  
+  z-index: 1; /* Ensure it's above the glitch-background */
 }
 
 /* Responsive Design */
@@ -193,4 +187,14 @@ body {
   .card {
     padding: 0.5rem;
   }
+}
+
+.glitch-background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: -1; /* Puts it behind the content */
+  overflow: hidden;
 }
