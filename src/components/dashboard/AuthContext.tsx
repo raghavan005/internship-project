@@ -64,6 +64,9 @@ interface AuthContextType {
   ) => Promise<void>;
   getUserMutualFunds: () => Promise<void>;
   deleteMutualFund: (fundId: string) => Promise<void>;
+  // Add these lines for bond integration
+  getWalletAmount: () => number | null;
+  recordBondPurchase: (investment: number) => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | null>(null);
@@ -97,7 +100,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
           if (userSnap.exists()) {
             const data = userSnap.data();
 
-            // Correctly access the purchases array
             const purchases =
               data.purchaseHistory &&
               data.purchaseHistory[0] &&
@@ -107,11 +109,9 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
             setUserData({
               walletAmount: data.walletAmount ?? 0,
-              purchaseHistory: purchases, // Set the purchases array
-              
+              purchaseHistory: purchases,
             });
-              
-            // Fetch Mutual Funds Separately
+
             await getUserMutualFunds();
           } else {
             await setDoc(userRef, { walletAmount: 0, purchaseHistory: [] });
@@ -169,7 +169,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       quantity,
       price: price.toFixed(2),
       date: new Date().toISOString(),
-
     };
 
     try {
@@ -258,6 +257,15 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     }
   };
 
+  const getWalletAmount = () => {
+    return userData?.walletAmount || null;
+  };
+
+  const recordBondPurchase = async (investment: number) => {
+    if (!user) return;
+    await updateWallet(-investment);
+  };
+
   if (loading) {
     return <div>Loading...</div>;
   }
@@ -274,6 +282,9 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         recordMutualFundInvestment,
         getUserMutualFunds,
         deleteMutualFund,
+        // Add these lines for bond integration
+        getWalletAmount,
+        recordBondPurchase,
       }}
     >
       {children}

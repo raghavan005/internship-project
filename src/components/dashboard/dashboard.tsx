@@ -8,6 +8,7 @@ import CustomBox from "./buysell";
 import Boxcontent from "./box";
 import SearchBox from "../dashboard/SearchBox"; // Adjust the path if necessary
 import Portfolio from "./portfolio/portfoliodata";
+import BondSellingPage from "../dashboard/bonds/bond"
 import {
   TrendingUp,
   Briefcase,
@@ -32,7 +33,7 @@ const menuItems = [
   { name: "Watchlist", icon: <Briefcase size={20} /> },
   { name: "Mutual Funds", icon: <Wallet size={20} /> },
   { name: "Portfolio", icon: <FileText size={20} /> },
-  { name: "Reports", icon: <BookOpen size={20} /> },
+  { name: "Bonds", icon: <BookOpen size={20} /> },
 ];
 
 // ✅ Wallet Dropdown Component
@@ -276,8 +277,12 @@ const Dashboard = () => {
             <Portfolio />
           </>
         );
-      case "Reports":
-        return <h2>📑 Reports Content</h2>;
+      case "Bonds":
+        return (
+          <>
+          <BondSellingPage />
+          </>
+        );
       default:
         return <h2>Welcome to the App</h2>;
     }
