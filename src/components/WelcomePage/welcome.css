@@ -22,10 +22,14 @@ body {
 
 /* Glassy Effect */
 .glass {
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.1); /* Light transparent background */
+  backdrop-filter: blur(15px); /* Smooth blur effect */
+  -webkit-backdrop-filter: blur(15px);
+  border: 1px solid rgba(255, 255, 255, 0.2); /* Soft border */
+  border-radius: 10px; /* Rounded corners */
+  box-shadow: 0 4px 10px rgba(112, 111, 111, 0.1); /* Subtle shadow for depth */
+  padding: 20px; /* Adjust padding as needed */
+  color: rgb(252, 248, 248); /* Text color for contrast */
 }
 
 /* Main Container */
@@ -54,7 +58,7 @@ body {
 
 /* Main Content */
 .container-fluid {
-  padding-top: 200px;
+  padding-top: 50px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -81,6 +85,8 @@ body {
   display: flex;
   justify-content: center; /* Horizontally center the video */
   align-items: center; /* Vertically center the video */
+  
+
 }
 
 .video {
@@ -96,7 +102,7 @@ body {
   right: 10px;
   background-color: rgba(7, 16, 63, 0.7);
   border: none;
-  color: #0ff;
+  color: rgb(32, 54, 54);
   font-size: 1.5rem;
   cursor: pointer;
   z-index: 10;
@@ -114,6 +120,7 @@ body {
   padding: 2rem;
   width: 100%;
   max-width: 600px;
+  height: 95%;
 }
 
 .assets-title {
@@ -140,14 +147,13 @@ body {
 }
 
 .icon {
-  filter: drop-shadow(0 0 5px #0ff);
+  filter: drop-shadow(0 0 5px #7EFF66);
   margin-bottom: 0.5rem;
 }
 
 .card-title {
-  margin: 0.5rem 0;
-  font-size: 1.25rem;
-  font-weight: bold;
+  font-size: 1rem; /* Makes text smaller */
+  margin: 0.25rem 0; /* Reduces spacing */
 }
 
 .card-text {
@@ -167,7 +173,11 @@ body {
   border: none;
   cursor: pointer;
   z-index: 1; /* Ensure it's above the glitch-background */
+  letter-spacing: 2px;
+  box-shadow: 0 0 10px rgb(43, 44, 44), 0 0 20px rgb(162, 149, 166), 0 0 30px rgb(51, 52, 51);
+  transition: background-color 0.3s ease-in-out, box-shadow 0.1s ease-in-out;
 }
+
 
 /* Responsive Design */
 @media (max-width: 1200px) {

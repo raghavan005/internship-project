@@ -10,7 +10,7 @@ import LetterGlitch from "./animation/letterglitch";
 
 // Container animation with stagger for child elements
 const containerVariants = {
-  hidden: { opacity: 0 },
+  hidden: { opacity: 0.1 },
   visible: {
     opacity: 1,
     transition: { when: "beforeChildren", staggerChildren: 0.3 },
@@ -20,7 +20,7 @@ const containerVariants = {
 // Header animation: slide from top
 const headerVariants = {
   hidden: { y: -50, opacity: 0 },
-  visible: { y: 0, opacity: 1, transition: { duration: 0.5, ease: "easeOut" } },
+  visible: { y: 0, opacity: 2, transition: { duration: 0.5, ease: "easeOut" } },
 };
 
 // Video section animation: slide from left
@@ -201,22 +201,18 @@ function Welcome() {
       </main>
 
       {/* Get Started Button with interactive motion */}
-      <motion.button
+      <button
         className="get-started-btn glass"
-        variants={buttonVariants}
-        whileHover="hover"
-        whileTap="tap"
         onClick={() => navigate("/login")}
         style={{
           position: "fixed",
           bottom: "2rem",
-          left: "50%",
-          transform: "translateX(-50%)",
+          left: "calc(50% - 5rem)", // Adjust based on button width
           zIndex: 1,
         }}
       >
         Get Started
-      </motion.button>
+      </button>
     </motion.div>
   );
 }
