@@ -5,6 +5,7 @@ import LoginImage from "../../assets/images/screenshot.png";
 import SignInWithSocialMedia from "./SignInWithSocialMedia";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
+import Lightning from "./animation/Lightning";
 
 const LoginPage: React.FC = () => {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
@@ -22,7 +23,6 @@ const LoginPage: React.FC = () => {
   }, []);
 
   // Redirect if authenticated
-  
 
   // Show loading spinner until authentication check is complete
   if (isAuthenticated === null) {
@@ -31,11 +31,23 @@ const LoginPage: React.FC = () => {
 
   return (
     <motion.div className="login-container">
+      <div
+        style={{
+          position: "absolute",
+          top: 0,
+          left: 0,
+          width: "100vw",
+          height: "100vh",
+           // Sends it behind other content
+        }}
+      >
+        <Lightning hue={220} xOffset={0} speed={1} intensity={1} size={1} />
+      </div>
       <div className="login-wrapper">
         {/* Left Side - Image */}
         <motion.div
           className="login-image-container"
-          initial={{ opacity: 0, x: -100 }} // Adjusted x to a larger value for a better animation effect
+          initial={{ opacity: 0, x: -100 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ type: "spring", duration: 2, stiffness: 300 }}
         >
@@ -57,7 +69,7 @@ const LoginPage: React.FC = () => {
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
           >
-            <h2 className="text-center">Welcome Back</h2>
+            <h2 className="text-center">Welcome</h2>
             <div className="text-center mt-4 mb-4">
               <SignInWithSocialMedia />
             </div>
@@ -74,16 +86,21 @@ const LoginPage: React.FC = () => {
             justify-content: center;
             align-items: center;
             height: 100vh;
-            background: linear-gradient(to right, #6D53DC, #DC5356);
-            background-size: 400% 400%;
-            animation: gradientShift 5s infinite ease-in-out;
-            font-family: 'Montserrat', sans-serif;
+            position: relative;
+            overflow: hidden;
+            background: black; // Set background to black or dark color
           }
 
           @keyframes gradientShift {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
+            0% {
+              background-position: 0% 50%;
+            }
+            50% {
+              background-position: 100% 50%;
+            }
+            100% {
+              background-position: 0% 50%;
+            }
           }
 
           .login-wrapper {
@@ -91,10 +108,12 @@ const LoginPage: React.FC = () => {
             width: 80%;
             max-width: 900px;
             background: rgba(255, 255, 255, 0.2);
-            backdrop-filter: blur(10px);
+            backdrop-filter: blur(1px);
             border-radius: 15px;
             overflow: hidden;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            justify-content: center; /* center the content horizontally */
+            align-items: center; /* center the content vertically */
           }
 
           .login-image-container {
