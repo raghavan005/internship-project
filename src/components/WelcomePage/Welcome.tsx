@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useRef, useEffect } from "react";
 import { TrendingUp, Wallet, Coins, Diamond } from "lucide-react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import video from "../../assets/images/welcome speech (1).mp4";
@@ -63,16 +63,14 @@ const buttonVariants = {
 };
 
 function Welcome() {
-  const [isMuted, setIsMuted] = useState(true);
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const navigate = useNavigate();
 
-  const handleMuteToggle = () => {
+  useEffect(() => {
     if (videoRef.current) {
-      videoRef.current.muted = !isMuted;
-      setIsMuted(!isMuted);
+      videoRef.current.muted = false; // Unmute by default
     }
-  };
+  }, []);
 
   return (
     <motion.div
@@ -130,15 +128,12 @@ function Welcome() {
                 className="video"
                 autoPlay
                 loop
-                muted={isMuted}
                 playsInline
+                muted={false} // Ensure muted is false
               >
                 <source src={video} type="video/mp4" />
                 Your browser does not support the video tag.
               </video>
-              <button onClick={handleMuteToggle} className="mute-button">
-                {isMuted ? "🔇" : "🔊"}
-              </button>
             </motion.div>
           </div>
 
