@@ -71,6 +71,7 @@ const SearchBox: React.FC<SearchBoxProps> = ({ apiKey }) => {
           width: "100%",
           height: "50px",
           display: "flex",
+          borderRadius:"10px",
           boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.2)",
         }}
       >

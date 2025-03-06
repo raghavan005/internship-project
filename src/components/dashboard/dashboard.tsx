@@ -1,14 +1,22 @@
-import React, { useState, useCallback, useMemo, useEffect } from "react";
+import React, {
+  useState,
+  useCallback,
+  useMemo,
+  useEffect,
+  useRef,
+} from "react";
 import { useNavigate } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import logo from "../../assets/images/screenshot.png";
 import { motion } from "framer-motion";
-import { useAuth } from "../dashboard/AuthContext"; // ✅ Import Auth Context
+import { useAuth } from "../dashboard/AuthContext";
 import CustomBox from "./buysell";
 import Boxcontent from "./box";
-import SearchBox from "../dashboard/SearchBox"; // Adjust the path if necessary
+import SearchBox from "../dashboard/SearchBox";
 import Portfolio from "./portfolio/portfoliodata";
-import BondSellingPage from "../dashboard/bonds/bond"
+import BondSellingPage from "../dashboard/bonds/bond";
+import { signOut } from "firebase/auth";
+import { auth } from "../Login/firebase";
 import {
   TrendingUp,
   Briefcase,
@@ -34,27 +42,45 @@ const menuItems = [
   { name: "Mutual Funds", icon: <Wallet size={20} /> },
   { name: "Portfolio", icon: <FileText size={20} /> },
   { name: "Bonds", icon: <BookOpen size={20} /> },
+  
 ];
 
-// ✅ Wallet Dropdown Component
+// Wallet Dropdown Component
 const WalletDropdown = () => {
-  const { user, userData, updateWallet } = useAuth(); // Access userData and updateWallet
-
+  const { user, userData, updateWallet } = useAuth();
   const [showWalletDropdown, setShowWalletDropdown] = useState(false);
+  const dropdownRef = useRef(null);
 
   useEffect(() => {
-    // No need to initialize walletAmount here. It's coming from userData.
-  }, [userData]); // Re-run effect when userData changes
+    const handleClickOutside = (event: globalThis.MouseEvent) => {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
+        setShowWalletDropdown(false);
+      }
+    };
 
-  if (!user || !userData) return null; // Hide if no user or userData is available
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [dropdownRef]);
+
+  if (!user || !userData) return null;
 
   const handleAddFunds = async () => {
+    const amount = parseFloat(prompt("Enter amount to add:", "100") || "0");
+    if (isNaN(amount) || amount <= 0) {
+      alert("Please enter a valid amount to add.");
+      return;
+    }
     try {
-      await updateWallet(100); // Use updateWallet from context
-      alert("Added ₹100 successfully!"); // Provide user feedback
+      await updateWallet(amount);
+      alert(`Added ₹${amount} successfully!`);
     } catch (error) {
       console.error("Error adding funds:", error);
-      alert("Failed to add funds. Please try again."); // Handle errors
+      alert("Failed to add funds. Please try again.");
     }
   };
 
@@ -67,7 +93,7 @@ const WalletDropdown = () => {
       return;
     }
     try {
-      await updateWallet(-amount); // Use updateWallet with a negative amount
+      await updateWallet(-amount);
       alert(`Withdrawn ₹${amount} successfully!`);
     } catch (error) {
       console.error("Error withdrawing funds:", error);
@@ -76,7 +102,7 @@ const WalletDropdown = () => {
   };
 
   return (
-    <div className="wallet-dropdown">
+    <div className="wallet-dropdown" ref={dropdownRef}>
       <motion.button
         initial={{ scale: 0.9 }}
         animate={{ scale: 1 }}
@@ -88,8 +114,8 @@ const WalletDropdown = () => {
         aria-haspopup="true"
         aria-expanded={showWalletDropdown}
       >
-        <CreditCard size={24} className="wallet-icon" />$
-        {userData?.walletAmount?.toFixed(2) || "0.00"}{" "}
+        <CreditCard size={24} className="wallet-icon" />
+        {userData?.walletAmount?.toFixed(2) || "0.00"}
       </motion.button>
 
       {showWalletDropdown && (
@@ -102,11 +128,11 @@ const WalletDropdown = () => {
         >
           <h6 className="dropdown-header">Wallet Balance</h6>
           <p className="dropdown-item-text wallet-balance">
-            <strong>₹{userData?.walletAmount?.toFixed(2) || "0.00"}</strong>{" "}
+            <strong>₹{userData?.walletAmount?.toFixed(2) || "0.00"}</strong>
           </p>
           <div className="dropdown-divider"></div>
           <button className="dropdown-item wallet-add" onClick={handleAddFunds}>
-            ➕ Add ₹100
+            ➕ Add Funds
           </button>
           <button
             className="dropdown-item wallet-withdraw"
@@ -119,19 +145,51 @@ const WalletDropdown = () => {
     </div>
   );
 };
+// User Profile Drop-down Component
 
-// ✅ User Profile Drop-down Component
 const UserProfileDropdown = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
   const [showDropdown, setShowDropdown] = useState(false);
+  const dropdownRef = useRef(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event: globalThis.MouseEvent) => {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
+        setShowDropdown(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [dropdownRef]);
 
   if (!user) return null;
+
+  const handleLogout = async () => {
+    console.log("Logout button clicked");
+    try {
+      await signOut(auth); // Sign out with Firebase
+      localStorage.removeItem("yourAuthToken"); // Clear local storage
+      console.log("Signed out and local storage cleared");
+      navigate("/login"); // Navigate to login page
+    } catch (error) {
+      console.error("Error signing out:", error);
+      alert("Failed to sign out. Please try again.");
+    }
+  };
+
 
   return (
     <div
       className="user-profile-dropdown"
       style={{ position: "relative", display: "inline-block" }}
+      ref={dropdownRef}
     >
       <motion.button
         initial={{ scale: 0.9, opacity: 0 }}
@@ -142,22 +200,22 @@ const UserProfileDropdown = () => {
         onClick={() => setShowDropdown(!showDropdown)}
         aria-haspopup="true"
         aria-expanded={showDropdown}
-        style={{ display: "flex", alignItems: "center" }} // Align icon and name/picture
+        style={{ display: "flex", alignItems: "center" }}
       >
         {user.profilePicture ? (
           <img
-            src={user.profilePicture} // Assuming your user object has profilePicture URL
+            src={user.profilePicture}
             alt="Profile"
             style={{
               width: "24px",
               height: "24px",
               borderRadius: "50%",
               marginRight: "8px",
-              objectFit: "cover", // ensures the image fits within the bounds
+              objectFit: "cover",
             }}
           />
         ) : (
-          <User size={24} style={{ marginRight: "8px" }} /> // Fallback if no profile picture
+          <User size={24} style={{ marginRight: "8px" }} />
         )}
         {user.displayName || "User"}
       </motion.button>
@@ -176,7 +234,7 @@ const UserProfileDropdown = () => {
           >
             {user.profilePicture ? (
               <img
-                src={user.profilePicture} // Assuming your user object has profilePicture URL
+                src={user.profilePicture}
                 alt="Profile"
                 style={{
                   width: "30px",
@@ -187,7 +245,7 @@ const UserProfileDropdown = () => {
                 }}
               />
             ) : (
-              <User size={30} style={{ marginRight: "8px" }} /> // Fallback if no profile picture
+              <User size={30} style={{ marginRight: "8px" }} />
             )}
             <h6 className="dropdown-header">{user.displayName || "User"}</h6>
           </div>
@@ -205,15 +263,7 @@ const UserProfileDropdown = () => {
           >
             <Settings size={18} className="me-1" /> Settings
           </button>
-          <button
-            className="dropdown-item text-danger"
-            onClick={() => {
-              console.log("Logout button clicked");
-              setTimeout(() => {
-                navigate("/login");
-              }, 100);
-            }}
-          >
+          <button className="dropdown-item text-danger" onClick={handleLogout}>
             <LogOut size={18} className="me-1" /> Logout
           </button>
         </motion.div>
@@ -222,12 +272,12 @@ const UserProfileDropdown = () => {
   );
 };
 
-// ✅ Dashboard Component
+// Dashboard Component
 const Dashboard = () => {
   const [activePage, setActivePage] = useState("Dashboard");
   const stocks = useStockData();
 
-  // ✅ Renders content based on selected menu
+  // Renders content based on selected menu
   const renderContent = useCallback(() => {
     switch (activePage) {
       case "Dashboard":
@@ -261,8 +311,10 @@ const Dashboard = () => {
       case "Watchlist":
         return (
           <>
-            <Chart />
-            <CustomBox />
+            <div className="watchlist-container">
+              <Chart />
+              <CustomBox />
+            </div>
           </>
         );
       case "Mutual Funds":
@@ -280,7 +332,7 @@ const Dashboard = () => {
       case "Bonds":
         return (
           <>
-          <BondSellingPage />
+            <BondSellingPage />
           </>
         );
       default:
@@ -292,7 +344,7 @@ const Dashboard = () => {
 
   return (
     <div className="dashboard-container">
-      {/* ✅ Stock Ticker Navbar */}
+      {/* Stock Ticker Navbar */}
       <div className="stock-ticker-bar">
         <div className="ticker-container">
           {memoizedStocks.length > 0 ? (
@@ -313,7 +365,7 @@ const Dashboard = () => {
         </div>
       </div>
 
-      {/* ✅ User Profile & Wallet Navbar */}
+      {/* User Profile & Wallet Navbar */}
       <div
         className="user-navbar"
         style={{
@@ -326,7 +378,7 @@ const Dashboard = () => {
         {/* Search Box Wrapper */}
         <div
           style={{
-            flexGrow: 1, // Allows it to take available space
+            flexGrow: 1,
             display: "flex",
             justifyContent: "center",
           }}
@@ -345,7 +397,7 @@ const Dashboard = () => {
         <UserProfileDropdown />
       </div>
 
-      {/* ✅ Sidebar Navigation */}
+      {/* Sidebar Navigation */}
       <div className="sidebar">
         <div className="logo-container">
           <img src={logo} alt="Providance Logo" className="sidebar-logo" />
@@ -354,9 +406,14 @@ const Dashboard = () => {
           {menuItems.map((item) => (
             <li key={item.name} className="nav-item">
               <motion.button
-                whileHover={{ scale: 1.2 }}
+                whileHover={{ scale: 1.1 }} 
                 whileTap={{ scale: 0.95 }}
-                transition={{ type: "spring", stiffness: 200, damping: 10 }}
+                transition={{
+                  type: "spring",
+                  stiffness: 500,
+                  damping: 8,
+                  duration: 0.1,
+                }}
                 className={`nav-button ${
                   activePage === item.name ? "active" : ""
                 }`}
@@ -370,7 +427,7 @@ const Dashboard = () => {
         </ul>
       </div>
 
-      {/* ✅ Main Content */}
+      {/* Main Content */}
       <div className="main-content">{renderContent()}</div>
     </div>
   );

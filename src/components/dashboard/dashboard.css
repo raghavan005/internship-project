@@ -1,7 +1,7 @@
 /* General Styles */
 .dashboard-container {
   display: flex;
-  height: 100vh;
+  min-height: 100vh; /* Use min-height for flexible height */
   overflow: hidden;
   background-color: rgb(12, 20, 70);
 }
@@ -19,6 +19,7 @@
   top: 0;
   left: 0;
   z-index: 1000;
+  box-sizing: border-box; /* Include padding in width calculation */
 }
 
 .ticker-container {
@@ -52,13 +53,15 @@
   background-color: rgb(12, 20, 70);
   padding: 10px 20px;
   position: fixed;
-  top: 50px;
+  top: 40px;
   left: 0;
   z-index: 1000;
   display: flex;
-  justify-content: center; /* Changed from flex-end to center */
+  justify-content: center;
   align-items: center;
   box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+  border-bottom: 2px solid rgb(8, 8, 8);
+  box-sizing: border-box; /* Include padding in width calculation */
 }
 
 /* User Profile Dropdown */
@@ -90,6 +93,7 @@
   box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.2);
   border-radius: 8px;
   background-color: white;
+  box-sizing: border-box; /* Include padding in width calculation */
 }
 
 .user-profile-dropdown .dropdown-header {
@@ -117,24 +121,26 @@
 /* ✅ Sidebar */
 .sidebar {
   width: 250px;
-  height: 100vh;
+  min-height: 100vh; /* Use min-height */
   background-color: rgb(12, 20, 70);
   color: white;
-  padding-top: 100px; /* Adjusted for fixed navbars */
+  padding-top: 100px;
   position: fixed;
   left: 0;
   top: 0;
   display: flex;
   flex-direction: column;
   align-items: center;
+  border-right: 2px solid rgb(3, 3, 3);
+  box-sizing: border-box; /* Include padding in width calculation */
 }
 
 .logo-container {
-  margin-bottom: 20px;
+  margin-bottom: 40px;
 }
 
 .sidebar-logo {
-  width: 150px;
+  width: 250px;
 }
 
 .nav {
@@ -145,6 +151,7 @@
 .nav-item {
   width: 100%;
   text-align: center;
+  margin-bottom: 30px;
 }
 
 .nav-button {
@@ -160,6 +167,7 @@
   gap: 10px;
   cursor: pointer;
   transition: 0.3s;
+  box-sizing: border-box; /* Include padding in width calculation */
 }
 
 .nav-button:hover,
@@ -169,11 +177,12 @@
 
 /* ✅ Main Content */
 .main-content {
-  margin-left: 250px; /* Adjusted for sidebar width */
-  margin-top: 100px; /* Adjusted for navbars */
+  margin-left: 250px;
+  margin-top: 100px;
   padding: 20px;
   width: calc(100% - 250px);
   overflow-y: auto;
+  box-sizing: border-box; /* Include padding in width calculation */
 }
 
 /* ✅ Responsive Design */
@@ -183,14 +192,18 @@
   }
 
   .sidebar {
-    width: 200px;
+    width: 100%; /* Full width on small screens */
     padding-top: 80px;
+    position: static; /* Remove fixed positioning */
+    height: auto;
+    border-right: none;
   }
 
   .main-content {
-    margin-left: 200px;
+    margin-left: 0; /* Remove left margin */
     margin-top: 100px;
     padding: 15px;
+    width: 100%; /* Full width on small screens */
   }
 
   .stock-ticker-bar {
@@ -199,6 +212,7 @@
 
   .user-navbar {
     padding: 8px 15px;
+    top: 40px;
   }
 
   .nav-button {
@@ -211,12 +225,11 @@
   position: relative;
   display: inline-block;
   margin-right: 20px;
-  
 }
 
 /* Wallet Button */
 .wallet-button {
-   background-color: #343a40;
+  background-color: #343a40;
   border: none;
   color: white;
   padding: 5px 10px;
@@ -226,7 +239,7 @@
 }
 
 .wallet-button:hover {
-  background-color: #ecececd3; /* Slightly lighter yellow */
+  background-color: #ecececd3;
 }
 
 /* Wallet Icon */
@@ -241,6 +254,7 @@
   padding: 10px;
   border-radius: 8px;
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+  box-sizing: border-box; /* Include padding in width calculation */
 }
 
 /* Wallet Header */
@@ -254,7 +268,7 @@
 .wallet-balance {
   font-size: 18px;
   font-weight: bold;
-  color: #27ae60; /* Green for balance */
+  color: #27ae60;
 }
 
 /* Wallet Buttons */
@@ -266,11 +280,30 @@
   transition: background 0.2s;
 }
 
-.wallet-add:hover,
-.wallet-withdraw:hover {
-  background-color: rgb(227, 228, 236);
+.watchlist-container {
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 20px;
 }
 
-.wallet-zindex {
-  z-index: 2;
+.watchlist-container > * {
+  flex: 1 1 500px;
+  min-width: 300px;
+}
+
+.custom-box {
+  /* Add these styles to make the CustomBox stretch vertically */
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1; /* Allow the CustomBox to grow vertically */
+  min-height: 0; /* Important for flex-grow to work correctly */
+}
+
+@media (max-width: 768px) {
+  .watchlist-container {
+    flex-direction: column;
+    gap: 10px;
+  }
 }

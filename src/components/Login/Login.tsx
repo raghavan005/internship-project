@@ -7,15 +7,27 @@ import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 
 const LoginPage: React.FC = () => {
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
   const [isHovered, setIsHovered] = useState(false);
   const navigate = useNavigate();
 
+  // Check authentication status
   useEffect(() => {
-    const isAuthenticated = localStorage.getItem("isAuthenticated");
-    if (isAuthenticated === "true") {
-      navigate("/dashboard");
+    const authStatus = localStorage.getItem("isAuthenticated");
+    if (authStatus === "true") {
+      setIsAuthenticated(true);
+    } else {
+      setIsAuthenticated(false);
     }
-  }, [navigate]);
+  }, []);
+
+  // Redirect if authenticated
+  
+
+  // Show loading spinner until authentication check is complete
+  if (isAuthenticated === null) {
+    return <div>Loading...</div>; // Or you can replace it with a more elaborate loading spinner
+  }
 
   return (
     <motion.div className="login-container">
@@ -23,9 +35,9 @@ const LoginPage: React.FC = () => {
         {/* Left Side - Image */}
         <motion.div
           className="login-image-container"
-          initial={{ opacity: 0, x: -50 }}
-          animate={{ opacity: 1, x: 1 }}
-          transition={{ type:'spring',duration: 2,stiffness:300 }}
+          initial={{ opacity: 0, x: -100 }} // Adjusted x to a larger value for a better animation effect
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ type: "spring", duration: 2, stiffness: 300 }}
         >
           <img
             src={LoginImage}
@@ -55,8 +67,7 @@ const LoginPage: React.FC = () => {
 
       <style>
         {`
-
-         @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600&display=swap');
+          @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600&display=swap');
 
           .login-container {
             display: flex;
