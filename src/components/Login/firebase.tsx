@@ -4,12 +4,12 @@ import { getFirestore, doc, getDoc } from "firebase/firestore";
 
 // Firebase configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyCb7Ya8olAmJMPJt_fw4bR71KjEmUNaHjs",
-  authDomain: "providence-trade-7d46b.firebaseapp.com",
-  projectId: "providence-trade-7d46b",
-  storageBucket: "providence-trade-7d46b.appspot.com",
-  messagingSenderId: "465579269493",
-  appId: "1:465579269493:web:1d082b84c93a52f133073c",
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+  appId: import.meta.env.VITE_FIREBASE_APP_ID,
 };
 
 // Initialize Firebase

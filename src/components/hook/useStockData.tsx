@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 
-const API_KEY = "cuqpds1r01qhaag2qr4gcuqpds1r01qhaag2qr50"; // Replace with your Finnhub API key
+const API_KEY = import.meta.env.VITE_FINHUB_API_KEY; // Replace with your Finnhub API key
 
 interface Stock {
   name: string;
