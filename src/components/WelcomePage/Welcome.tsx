@@ -196,7 +196,13 @@ function Welcome() {
       </main>
 
       {/* Get Started Button with interactive motion */}
-      <button
+      <motion.button
+        whileHover={{ scale: 1.1 }}
+        whileTap={{ scale: 0.95 }}
+        transition={{
+          type: "spring",
+          duration: 0.1,
+        }}
         className="get-started-btn glass"
         onClick={() => navigate("/login")}
         style={{
@@ -207,7 +213,7 @@ function Welcome() {
         }}
       >
         Get Started
-      </button>
+      </motion.button>
     </motion.div>
   );
 }
