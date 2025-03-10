@@ -12,7 +12,7 @@ const LoginPage: React.FC = () => {
   const [isHovered, setIsHovered] = useState(false);
   const navigate = useNavigate();
 
-  // Check authentication status
+  
   useEffect(() => {
     const authStatus = localStorage.getItem("isAuthenticated");
     if (authStatus === "true") {
@@ -22,11 +22,11 @@ const LoginPage: React.FC = () => {
     }
   }, []);
 
-  // Redirect if authenticated
+  
 
-  // Show loading spinner until authentication check is complete
+  
   if (isAuthenticated === null) {
-    return <div>Loading...</div>; // Or you can replace it with a more elaborate loading spinner
+    return <div>Loading...</div>; 
   }
 
   return (
@@ -38,13 +38,13 @@ const LoginPage: React.FC = () => {
           left: 0,
           width: "100vw",
           height: "100vh",
-           // Sends it behind other content
+           
         }}
       >
         <Lightning hue={220} xOffset={0} speed={1} intensity={1} size={1} />
       </div>
       <div className="login-wrapper">
-        {/* Left Side - Image */}
+        
         <motion.div
           className="login-image-container"
           initial={{ opacity: 0, x: -100 }}
@@ -58,7 +58,7 @@ const LoginPage: React.FC = () => {
           />
         </motion.div>
 
-        {/* Right Side - Login */}
+        
         <motion.div className="login-card">
           <motion.div
             className="card-content"

@@ -1,4 +1,4 @@
-/* Global Styles */
+
 body {
   margin: 0;
   padding: 0;
@@ -7,7 +7,7 @@ body {
   overflow-x: hidden;
 }
 
-/* Background Image */
+
 .background-motion {
   position: fixed;
   top: 0;
@@ -20,34 +20,34 @@ body {
   background-position: center;
 }
 
-/* Glassy Effect */
+
 .glass {
-  background: rgba(255, 255, 255, 0.1); /* Light transparent background */
-  backdrop-filter: blur(15px); /* Smooth blur effect */
+  background: rgba(255, 255, 255, 0.1); 
+  backdrop-filter: blur(15px); 
   -webkit-backdrop-filter: blur(15px);
-  border: 1px solid rgba(255, 255, 255, 0.2); /* Soft border */
-  border-radius: 10px; /* Rounded corners */
-  box-shadow: 0 4px 10px rgba(112, 111, 111, 0.1); /* Subtle shadow for depth */
-  padding: 20px; /* Adjust padding as needed */
-  color: rgb(252, 248, 248); /* Text color for contrast */
+  border: 1px solid rgba(255, 255, 255, 0.2); 
+  border-radius: 10px; 
+  box-shadow: 0 4px 10px rgba(112, 111, 111, 0.1); 
+  padding: 20px; 
+  color: rgb(252, 248, 248); 
 }
 
-/* Main Container */
+
 .main-container {
   position: relative;
   min-height: 100vh;
   padding-bottom: 4rem;
-  z-index: 0; /* Ensure it's above the glitch-background */
+  z-index: 0; 
 }
 
-/* Header */
+
 .header {
   padding: 1rem;
   text-align: center;
   position: absolute;
   top: 0;
   width: 100%;
-  z-index: 1; /* Ensure it's above the glitch-background */
+  z-index: 1; 
 }
 
 .logo {
@@ -56,16 +56,16 @@ body {
   border-radius: 5%;
 }
 
-/* Main Content */
+
 .container-fluid {
   padding-top: 50px;
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 1; /* Ensure it's above the glitch-background */
+  z-index: 1; 
 }
 
-/* Row */
+
 .content-row {
   display: flex;
   flex-wrap: wrap;
@@ -74,7 +74,7 @@ body {
   justify-content: center;
 }
 
-/* Video Section */
+
 .video-section {
   display: flex;
   justify-content: center;
@@ -83,8 +83,8 @@ body {
 
 .video-container {
   display: flex;
-  justify-content: center; /* Horizontally center the video */
-  align-items: center; /* Vertically center the video */
+  justify-content: center; 
+  align-items: center; 
   
 
 }
@@ -95,7 +95,7 @@ body {
   object-fit: cover;
 }
 
-/* Mute Button */
+
 .mute-button {
   position: absolute;
   bottom: 10px;
@@ -108,7 +108,7 @@ body {
   z-index: 10;
 }
 
-/* Assets Section */
+
 .assets-section {
   display: flex;
   justify-content: center;
@@ -130,7 +130,7 @@ body {
   font-weight: bold;
 }
 
-/* Cards */
+
 .assets-cards {
   display: flex;
   flex-wrap: wrap;
@@ -152,15 +152,15 @@ body {
 }
 
 .card-title {
-  font-size: 1rem; /* Makes text smaller */
-  margin: 0.25rem 0; /* Reduces spacing */
+  font-size: 1rem; 
+  margin: 0.25rem 0; 
 }
 
 .card-text {
   font-size: 0.9rem;
 }
 
-/* Get Started Button */
+
 .get-started-btn {
   position: fixed;
   bottom: 2rem;
@@ -172,14 +172,14 @@ body {
   font-weight: bold;
   border: none;
   cursor: pointer;
-  z-index: 1; /* Ensure it's above the glitch-background */
+  z-index: 1; 
   letter-spacing: 2px;
   box-shadow: 0 0 10px rgb(43, 44, 44), 0 0 20px rgb(162, 149, 166), 0 0 30px rgb(51, 52, 51);
   transition: background-color 0.3s ease-in-out, box-shadow 0.1s ease-in-out;
 }
 
 
-/* Responsive Design */
+
 @media (max-width: 1200px) {
   .content-row {
     flex-direction: column;
@@ -205,6 +205,6 @@ body {
   left: 0;
   width: 100vw;
   height: 100vh;
-  z-index: -1; /* Puts it behind the content */
+  z-index: -1; 
   overflow: hidden;
 }

@@ -8,7 +8,7 @@ import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import LetterGlitch from "./animation/letterglitch";
 
-// Container animation with stagger for child elements
+
 const containerVariants = {
   hidden: { opacity: 0.1 },
   visible: {
@@ -17,19 +17,19 @@ const containerVariants = {
   },
 };
 
-// Header animation: slide from top
+
 const headerVariants = {
   hidden: { y: -50, opacity: 0 },
   visible: { y: 0, opacity: 2, transition: { duration: 0.5, ease: "easeOut" } },
 };
 
-// Video section animation: slide from left
+
 const videoVariants = {
   hidden: { x: -100, opacity: 0 },
   visible: { x: 0, opacity: 1, transition: { duration: 0.8, ease: "easeOut" } },
 };
 
-// Assets container animation: slide from right with staggered children
+
 const assetsContainerVariants = {
   hidden: { x: 100, opacity: 0 },
   visible: {
@@ -44,7 +44,7 @@ const assetsContainerVariants = {
   },
 };
 
-// Individual card animation: fade in & scale up; interactive hover/tap effects
+
 const cardVariants = {
   hidden: { opacity: 0, scale: 0.8 },
   visible: {
@@ -56,7 +56,7 @@ const cardVariants = {
   tap: { scale: 0.95 },
 };
 
-// Button animation for hover and tap
+
 const buttonVariants = {
   hover: { scale: 1.1, boxShadow: "0 0 25px rgba(255,255,255,0.9)" },
   tap: { scale: 0.95 },
@@ -68,7 +68,7 @@ function Welcome() {
 
   useEffect(() => {
     if (videoRef.current) {
-      videoRef.current.muted = false; // Unmute by default
+      videoRef.current.muted = false; 
     }
   }, []);
 
@@ -79,7 +79,7 @@ function Welcome() {
       initial="hidden"
       animate="visible"
     >
-      {/* LetterGlitch Background - Full Screen */}
+      
       <div
         style={{
           position: "fixed",
@@ -95,11 +95,11 @@ function Welcome() {
           centerVignette={true}
           outerVignette={false}
           smooth={true}
-          glitchColors={["red", "blue", "green"]} // Provide the glitchColors prop
+          glitchColors={["red", "blue", "green"]} 
         />
       </div>
 
-      {/* Header with glassy finish */}
+      
       <header
         className="header glass"
         style={{ position: "relative", zIndex: 1 }}
@@ -117,7 +117,7 @@ function Welcome() {
         style={{ position: "relative", zIndex: 1 }}
       >
         <div className="row content-row">
-          {/* Video Section */}
+          
           <div className="col-md-5 video-section">
             <motion.div
               className="video-container glass"
@@ -129,7 +129,7 @@ function Welcome() {
                 autoPlay
                 loop
                 playsInline
-                muted={false} // Ensure muted is false
+                muted={false} 
               >
                 <source src={video} type="video/mp4" />
                 Your browser does not support the video tag.
@@ -137,7 +137,7 @@ function Welcome() {
             </motion.div>
           </div>
 
-          {/* Trading Assets Section */}
+          
           <div className="col-md-5 assets-section">
             <motion.div
               className="assets-container glass"
@@ -195,7 +195,7 @@ function Welcome() {
         </div>
       </main>
 
-      {/* Get Started Button with interactive motion */}
+      
       <motion.button
         whileHover={{ scale: 1.1 }}
         whileTap={{ scale: 0.95 }}
@@ -208,7 +208,7 @@ function Welcome() {
         style={{
           position: "fixed",
           bottom: "2rem",
-          left: "calc(50% - 5rem)", // Adjust based on button width
+          left: "calc(50% - 5rem)", 
           zIndex: 1,
         }}
       >

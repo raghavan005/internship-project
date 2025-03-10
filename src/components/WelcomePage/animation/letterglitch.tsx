@@ -189,7 +189,7 @@ const LetterGlitch = ({
   };
 
   const updateLetters = () => {
-    if (!letters.current || letters.current.length === 0) return; // Prevent accessing empty array
+    if (!letters.current || letters.current.length === 0) return; 
 
     const updateCount = Math.max(1, Math.floor(letters.current.length * 0.05));
 
@@ -274,7 +274,7 @@ const LetterGlitch = ({
       cancelAnimationFrame(animationRef.current!);
       window.removeEventListener("resize", handleResize);
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    
   }, [glitchSpeed, smooth]);
 
   const containerStyle = {
