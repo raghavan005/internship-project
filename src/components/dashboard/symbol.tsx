@@ -1,7 +1,6 @@
 import React, { useEffect, useRef, memo } from "react";
 
 function Trading() {
-  // ✅ Fix: Provide an initial value (null) to useRef
   const container = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {

@@ -174,10 +174,10 @@ const UserProfileDropdown = () => {
   const handleLogout = async () => {
     console.log("Logout button clicked");
     try {
-      await signOut(auth); // Sign out with Firebase
-      localStorage.removeItem("yourAuthToken"); // Clear local storage
+      await signOut(auth); 
+      localStorage.removeItem("yourAuthToken");
       console.log("Signed out and local storage cleared");
-      navigate("/login"); // Navigate to login page
+      navigate("/login"); 
     } catch (error) {
       console.error("Error signing out:", error);
       alert("Failed to sign out. Please try again.");
@@ -291,7 +291,7 @@ const Dashboard = () => {
                 padding: "20px",
               }}
             >
-              {/* Top Section - Trading & Boxcontent */}
+            
               <div style={{ display: "flex", flex: 1, gap: "20px" }}>
                 <div style={{ flex: 1 }}>
                   <Trading />
@@ -301,7 +301,7 @@ const Dashboard = () => {
                 </div>
               </div>
 
-              {/* Bottom Section - Purchase History */}
+              
               <div style={{ flex: 1 }}>
                 <PurchaseHistory />
               </div>
@@ -344,7 +344,6 @@ const Dashboard = () => {
 
   return (
     <div className="dashboard-container">
-      {/* Stock Ticker Navbar */}
       <div className="stock-ticker-bar">
         <div className="ticker-container">
           {memoizedStocks.length > 0 ? (
@@ -365,7 +364,6 @@ const Dashboard = () => {
         </div>
       </div>
 
-      {/* User Profile & Wallet Navbar */}
       <div
         className="user-navbar"
         style={{
@@ -375,7 +373,6 @@ const Dashboard = () => {
           height: "60px",
         }}
       >
-        {/* Search Box Wrapper */}
         <div
           style={{
             flexGrow: 1,
@@ -388,16 +385,12 @@ const Dashboard = () => {
           </div>
         </div>
 
-        {/* Wallet Dropdown */}
         <div style={{ zIndex: 2, position: "relative" }}>
           <WalletDropdown />
         </div>
 
-        {/* User Profile Dropdown */}
         <UserProfileDropdown />
       </div>
-
-      {/* Sidebar Navigation */}
       <div className="sidebar">
         <div className="logo-container">
           <img src={logo} alt="Providance Logo" className="sidebar-logo" />
@@ -426,8 +419,6 @@ const Dashboard = () => {
           ))}
         </ul>
       </div>
-
-      {/* Main Content */}
       <div className="main-content">{renderContent()}</div>
     </div>
   );
