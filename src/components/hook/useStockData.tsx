@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 
-const API_KEY = import.meta.env.VITE_FINHUB_API_KEY; // Replace with your Finnhub API key
+const API_KEY = import.meta.env.VITE_FINHUB_API_KEY; 
 
 interface Stock {
   name: string;
@@ -15,7 +15,7 @@ const useStockData = () => {
   useEffect(() => {
     const fetchStockData = async () => {
       try {
-        const symbols = ["AAPL", "GOOGL", "MSFT"]; // Add more stock symbols as needed
+        const symbols = ["AAPL", "GOOGL", "MSFT"]; 
         const responses = await Promise.all(
           symbols.map((symbol) =>
             fetch(
@@ -26,12 +26,12 @@ const useStockData = () => {
 
         const data = await Promise.all(responses.map((res) => res.json()));
 
-        console.log("API Response:", data); // Debugging: Check API response in console
+        console.log("API Response:", data); 
 
         const updatedStocks: Stock[] = symbols.map((symbol, index) => {
           const stockData = data[index];
 
-          // Check if stockData is valid before using toFixed()
+          
           if (
             !stockData ||
             stockData.c === undefined ||
@@ -54,7 +54,7 @@ const useStockData = () => {
           };
         });
 
-        // Only update state if prices have changed
+        
         setStocks((prevStocks) => {
           const hasChanged =
             JSON.stringify(prevStocks) !== JSON.stringify(updatedStocks);
@@ -65,10 +65,10 @@ const useStockData = () => {
       }
     };
 
-    fetchStockData(); // Fetch initially
-    const interval = setInterval(fetchStockData, 10000); // Fetch every 5 seconds
+    fetchStockData(); 
+    const interval = setInterval(fetchStockData, 10000); 
 
-    return () => clearInterval(interval); // Cleanup interval on unmount
+    return () => clearInterval(interval); 
   }, []);
 
   return stocks;

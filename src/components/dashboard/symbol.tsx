@@ -8,7 +8,7 @@ function Trading() {
     if (!container.current) return; 
     container.current.innerHTML = "";
 
-    // Create a new div for the widget
+    
     const widgetDiv = document.createElement("div");
     widgetDiv.className = "tradingview-widget-container__widget";
     container.current.appendChild(widgetDiv);
@@ -16,7 +16,7 @@ function Trading() {
    
 
 
-    // Create the script element
+    
      const script = document.createElement("script");
     script.src =
       "https://s3.tradingview.com/external-embedding/embed-widget-symbol-overview.js";

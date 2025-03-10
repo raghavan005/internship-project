@@ -88,7 +88,7 @@ const LoginPage: React.FC = () => {
             height: 100vh;
             position: relative;
             overflow: hidden;
-            background: black; // Set background to black or dark color
+            background: black;
           }
 
           @keyframes gradientShift {

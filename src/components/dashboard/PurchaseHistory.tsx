@@ -16,7 +16,7 @@ const PurchaseHistory: React.FC = () => {
   const [purchaseHistory, setPurchaseHistory] = useState<PurchaseEntry[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [holdings, setHoldings] = useState<{ [stock: string]: number }>({}); // Track holdings
+  const [holdings, setHoldings] = useState<{ [stock: string]: number }>({}); 
 
   useEffect(() => {
     if (!user) {
@@ -128,7 +128,7 @@ const PurchaseHistory: React.FC = () => {
   );
 };
 
-// Styles (same as before)
+
 const containerStyle: React.CSSProperties = {
   padding: "20px",
   color: "white",

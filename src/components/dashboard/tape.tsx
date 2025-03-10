@@ -6,22 +6,22 @@ const TradingViewTickerTape = () => {
   useEffect(() => {
     if (!containerRef.current) return;
 
-    // Clear previous widget before creating a new one
+    
     containerRef.current.innerHTML = "";
 
-    // Create a new div for the widget
+    
     const widgetDiv = document.createElement("div");
     widgetDiv.className = "tradingview-widget-container__widget";
     containerRef.current.appendChild(widgetDiv);
 
-    // Create the script element
+    
     const script = document.createElement("script");
     script.type = "text/javascript";
     script.src =
       "https://s3.tradingview.com/external-embedding/embed-widget-ticker-tape.js";
     script.async = true;
 
-    // Set the script content with widget configuration
+    
     script.innerHTML = `
     {
       "symbols": [

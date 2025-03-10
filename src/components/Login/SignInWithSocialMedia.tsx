@@ -4,7 +4,7 @@ import {
   GoogleAuthProvider,
   GithubAuthProvider,
   signInWithPopup,
-  onAuthStateChanged, // Import onAuthStateChanged
+  onAuthStateChanged, 
 } from "firebase/auth";
 import { auth, db } from "./firebase";
 import { setDoc, doc, getDoc } from "firebase/firestore";
@@ -69,18 +69,18 @@ const SignInWithSocialMedia: React.FC = () => {
       if (user) {
         const userRef = doc(db, "Users", user.uid);
 
-        // Use onAuthStateChanged to get the user data after the authentication is complete
+        
         onAuthStateChanged(auth, async (authUser) => {
-          // Very Important
+          
           if (authUser) {
-            // Check if user is still authenticated after onAuthStateChanged
+            
             try {
               const userDoc = await getDoc(userRef);
               if (!userDoc.exists()) {
                 await setDoc(userRef, {
-                  email: authUser.email || "", // Use authUser for email
-                  firstName: authUser.displayName || "Unknown", // Use authUser for display name
-                  photo: authUser.photoURL || "", // Use authUser for photo URL
+                  email: authUser.email || "", 
+                  firstName: authUser.displayName || "Unknown", 
+                  photo: authUser.photoURL || "", 
                   lastName: "",
                   demoMoney: 1000,
                 });

@@ -83,8 +83,8 @@ const SearchBox: React.FC<SearchBoxProps> = ({ apiKey }) => {
           onChange={handleInputChange}
           ref={(input) => {
             if (input) {
-              input.style.color = "white"; // Ensures text is white
-              input.style.setProperty("--placeholder-color", "white"); // For custom CSS variables
+              input.style.color = "white"; 
+              input.style.setProperty("--placeholder-color", "white"); 
             }
           }}
           style={{

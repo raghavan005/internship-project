@@ -45,7 +45,7 @@ const menuItems = [
   
 ];
 
-// Wallet Dropdown Component
+
 const WalletDropdown = () => {
   const { user, userData, updateWallet } = useAuth();
   const [showWalletDropdown, setShowWalletDropdown] = useState(false);
