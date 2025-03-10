@@ -1,4 +1,4 @@
-import React, { ReactNode } from "react"; // Correct import here
+import React, { ReactNode } from "react";
 import {
   BrowserRouter as Router,
   Routes,
