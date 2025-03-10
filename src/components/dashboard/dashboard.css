@@ -105,6 +105,9 @@
   align-items: center;
   gap: 5px;
   padding: 5px 10px;
+   position: relative;
+  z-index: 1000; /* Ensure it's on top */
+  pointer-events: auto; /* Allow clicks */
   cursor: pointer;
 }
 

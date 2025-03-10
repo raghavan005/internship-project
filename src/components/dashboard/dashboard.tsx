@@ -17,6 +17,7 @@ import Portfolio from "./portfolio/portfoliodata";
 import BondSellingPage from "../dashboard/bonds/bond";
 import { signOut } from "firebase/auth";
 import { auth } from "../Login/firebase";
+import { onAuthStateChanged } from "firebase/auth";
 import {
   TrendingUp,
   Briefcase,
@@ -171,18 +172,37 @@ const UserProfileDropdown = () => {
 
   if (!user) return null;
 
-  const handleLogout = async () => {
-    console.log("Logout button clicked");
-    try {
-      await signOut(auth); 
-      localStorage.removeItem("yourAuthToken");
-      console.log("Signed out and local storage cleared");
-      navigate("/login"); 
-    } catch (error) {
-      console.error("Error signing out:", error);
-      alert("Failed to sign out. Please try again.");
-    }
-  };
+ const handleLogout = async () => {
+   console.log("Logout button clicked");
+
+   try {
+     await signOut(auth); // Log out from Firebase
+     console.log("Signed out from Firebase");
+
+     localStorage.removeItem("yourAuthToken");
+     console.log("Local storage cleared");
+
+     setTimeout(() => {
+       console.log("Redirecting to login page...");
+       navigate("/login");
+     }, 1000); // Delay navigation to ensure Firebase updates state
+   } catch (error) {
+     console.error("Error signing out:", error);
+     alert("Failed to sign out. Please try again.");
+   }
+ };
+
+  // Redirect user when logged out
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (!user) {
+        console.log("User is logged out, redirecting...");
+        navigate("/login");
+      }
+    });
+
+    return () => unsubscribe(); // Cleanup the listener when unmounting
+  }, []);
 
 
   return (
@@ -251,19 +271,14 @@ const UserProfileDropdown = () => {
           </div>
           <p className="dropdown-item-text">{user.email || "No Email"}</p>
           <div className="dropdown-divider"></div>
-          <motion.button
-            className="dropdown-item"
-            onClick={() => navigate("/profile")}
-          >
-            <Edit size={18} className="me-1" /> Edit Profile
-          </motion.button>
+
           <button
-            className="dropdown-item"
-            onClick={() => navigate("/settings")}
+            className="dropdown-item text-danger"
+            onClick={(event) => {
+              console.log("Button clicked!", event);
+              handleLogout();
+            }}
           >
-            <Settings size={18} className="me-1" /> Settings
-          </button>
-          <button className="dropdown-item text-danger" onClick={handleLogout}>
             <LogOut size={18} className="me-1" /> Logout
           </button>
         </motion.div>

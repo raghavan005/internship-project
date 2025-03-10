@@ -8,7 +8,6 @@ import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import LetterGlitch from "./animation/letterglitch";
 
-
 const containerVariants = {
   hidden: { opacity: 0.1 },
   visible: {
@@ -17,18 +16,15 @@ const containerVariants = {
   },
 };
 
-
 const headerVariants = {
   hidden: { y: -50, opacity: 0 },
-  visible: { y: 0, opacity: 2, transition: { duration: 0.5, ease: "easeOut" } },
+  visible: { y: 0, opacity: 1, transition: { duration: 0.5, ease: "easeOut" } },
 };
-
 
 const videoVariants = {
   hidden: { x: -100, opacity: 0 },
   visible: { x: 0, opacity: 1, transition: { duration: 0.8, ease: "easeOut" } },
 };
-
 
 const assetsContainerVariants = {
   hidden: { x: 100, opacity: 0 },
@@ -44,7 +40,6 @@ const assetsContainerVariants = {
   },
 };
 
-
 const cardVariants = {
   hidden: { opacity: 0, scale: 0.8 },
   visible: {
@@ -55,7 +50,6 @@ const cardVariants = {
   hover: { y: -10, scale: 1.05, boxShadow: "0 0 20px rgba(255,255,255,0.9)" },
   tap: { scale: 0.95 },
 };
-
 
 const buttonVariants = {
   hover: { scale: 1.1, boxShadow: "0 0 25px rgba(255,255,255,0.9)" },
@@ -68,7 +62,10 @@ function Welcome() {
 
   useEffect(() => {
     if (videoRef.current) {
-      videoRef.current.muted = false; 
+      videoRef.current.muted = false;
+      videoRef.current
+        .play()
+        .catch((error) => console.error("Autoplay failed:", error));
     }
   }, []);
 
@@ -79,7 +76,6 @@ function Welcome() {
       initial="hidden"
       animate="visible"
     >
-      
       <div
         style={{
           position: "fixed",
@@ -95,11 +91,10 @@ function Welcome() {
           centerVignette={true}
           outerVignette={false}
           smooth={true}
-          glitchColors={["red", "blue", "green"]} 
+          glitchColors={["red", "blue", "green"]}
         />
       </div>
 
-      
       <header
         className="header glass"
         style={{ position: "relative", zIndex: 1 }}
@@ -117,7 +112,7 @@ function Welcome() {
         style={{ position: "relative", zIndex: 1 }}
       >
         <div className="row content-row">
-          
+          {/* Video Section */}
           <div className="col-md-5 video-section">
             <motion.div
               className="video-container glass"
@@ -129,7 +124,8 @@ function Welcome() {
                 autoPlay
                 loop
                 playsInline
-                muted={false} 
+                muted={false}
+                controls // Adding controls for debugging
               >
                 <source src={video} type="video/mp4" />
                 Your browser does not support the video tag.
@@ -137,7 +133,7 @@ function Welcome() {
             </motion.div>
           </div>
 
-          
+          {/* Assets Section */}
           <div className="col-md-5 assets-section">
             <motion.div
               className="assets-container glass"
@@ -195,7 +191,7 @@ function Welcome() {
         </div>
       </main>
 
-      
+      {/* Get Started Button */}
       <motion.button
         whileHover={{ scale: 1.1 }}
         whileTap={{ scale: 0.95 }}
@@ -208,7 +204,7 @@ function Welcome() {
         style={{
           position: "fixed",
           bottom: "2rem",
-          left: "calc(50% - 5rem)", 
+          left: "calc(50% - 5rem)",
           zIndex: 1,
         }}
       >
