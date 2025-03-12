@@ -46,8 +46,8 @@ This project is for educational and demonstration purposes only. **No real money
 ## Contact
 For any queries, feel free to reach out via email:
 - rragavan2004@gmail.com
-- example2@email.com
-- example3@email.com
+- saisangeetha35@email.com
+- a.vijayanandarulselvam@gmail.com
 
 ---
 Feel free to contribute and improve the project!
