@@ -49,6 +49,5 @@ For any queries, feel free to reach out via email:
 - saisangeetha35@email.com
 - a.vijayanandarulselvam@gmail.com
 
----
-Feel free to contribute and improve the project!
+
 
