@@ -43,6 +43,12 @@ You can view the initial design prototype here: [Figma Design URL](https://www.f
 ## License
 This project is for educational and demonstration purposes only. **No real money is used in this platform.**
 
+## Contact
+For any queries, feel free to reach out via email:
+- rragavan2004@gmail.com
+- example2@email.com
+- example3@email.com
+
 ---
 Feel free to contribute and improve the project!
 
