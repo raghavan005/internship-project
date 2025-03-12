@@ -33,7 +33,7 @@ This trading platform is a web-based application built using React with TypeScri
 4. Configure Firebase in the project by adding your Firebase credentials.
 
 ## Figma Design
-You can view the initial design prototype here: [Figma Design URL](#) *(https://www.figma.com/proto/42IDAx1m6435DHR88QN37m/workcohol?node-id=1-4&t=mwhEOmKfBWtpdAsu-1)*
+You can view the initial design prototype here: [Figma Design URL](https://www.figma.com/proto/42IDAx1m6435DHR88QN37m/workcohol?node-id=1-4&t=mwhEOmKfBWtpdAsu-1) 
 
 ## Future Enhancements
 - Real-time stock price updates
