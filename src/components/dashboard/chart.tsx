@@ -4,17 +4,17 @@ function TradingViewWidget() {
   const container = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
-    if (!container.current) return; // Prevent null reference issues
+    if (!container.current) return; 
 
-    // Clear previous widget to prevent duplication
+    
     container.current.innerHTML = "";
 
-    // Create a new div for the widget
+    
     const widgetDiv = document.createElement("div");
     widgetDiv.className = "tradingview-widget-container__widget";
     container.current.appendChild(widgetDiv);
 
-    // Create the script element
+    
     const script = document.createElement("script");
     script.src =
       "https://s3.tradingview.com/external-embedding/embed-widget-advanced-chart.js";
@@ -48,7 +48,7 @@ function TradingViewWidget() {
 
     container.current.appendChild(script);
 
-    // Cleanup function to remove the widget when the component unmounts
+    
     return () => {
       if (container.current) {
         container.current.innerHTML = "";

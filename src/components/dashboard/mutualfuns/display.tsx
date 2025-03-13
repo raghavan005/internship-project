@@ -57,11 +57,10 @@ const Display: React.FC = () => {
   if (mutualFundInvestments.length === 0)
     return <p>No mutual fund investments available.</p>;
 
-  // You will need to define your own logic to get the correct image for each fund.
-  // This example uses a simple mapping, but you might need to fetch images from an API or storage.
+  
   const getFundImage = (fundName: string): string => {
-    // Replace with your actual image logic
-    return ""; // Placeholder: Return an empty string or a default image if no match is found.
+    
+    return ""; 
   };
 
   const boxStyle: React.CSSProperties = {

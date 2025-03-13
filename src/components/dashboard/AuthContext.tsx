@@ -21,7 +21,7 @@ import {
   arrayUnion,
 } from "firebase/firestore";
 
-// Stock Transaction Interface
+
 interface PurchaseHistoryItem {
   stock: string;
   type: "buy" | "sell";
@@ -30,7 +30,7 @@ interface PurchaseHistoryItem {
   date: string;
 }
 
-// Mutual Fund Investment Interface
+
 interface MutualFundInvestment {
   id?: string;
   fundName: string;
@@ -40,7 +40,7 @@ interface MutualFundInvestment {
   investmentType: "mutualFund";
 }
 
-// Auth Context Type
+
 interface AuthContextType {
   user: any | null;
   userData: {
@@ -282,7 +282,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         recordMutualFundInvestment,
         getUserMutualFunds,
         deleteMutualFund,
-        // Add these lines for bond integration
+        
         getWalletAmount,
         recordBondPurchase,
       }}

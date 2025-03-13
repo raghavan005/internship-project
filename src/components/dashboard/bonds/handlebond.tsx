@@ -1,6 +1,6 @@
 import { collection, addDoc, getFirestore } from "firebase/firestore";
-import app from "../../Login/firebase"; // Corrected import
-import { auth } from "../../Login/firebase"; // Import auth
+import app from "../../Login/firebase"; 
+import { auth } from "../../Login/firebase"; 
 
 interface BondData {
   id: string;
@@ -29,9 +29,9 @@ export const handleBondPurchase = async (
   const purchaseCollection = collection(db, "purchasedBonds");
 
   try {
-    const currentUser = auth.currentUser; // Get the current user
+    const currentUser = auth.currentUser; 
     if (!currentUser) {
-      throw new Error("User not logged in."); // Handle case where user is not logged in
+      throw new Error("User not logged in."); 
     }
 
     await addDoc(purchaseCollection, {
@@ -40,7 +40,7 @@ export const handleBondPurchase = async (
       investment: purchaseData.investment,
       profit: purchaseData.profit,
       totalReturn: purchaseData.totalReturn,
-      userId: currentUser.uid, // Use the current user's uid
+      userId: currentUser.uid, 
       purchaseDate: new Date(),
     });
 

@@ -146,7 +146,7 @@ const WalletDropdown = () => {
     </div>
   );
 };
-// User Profile Drop-down Component
+
 
 const UserProfileDropdown = () => {
   const { user } = useAuth();
@@ -176,7 +176,7 @@ const UserProfileDropdown = () => {
    console.log("Logout button clicked");
 
    try {
-     await signOut(auth); // Log out from Firebase
+     await signOut(auth); 
      console.log("Signed out from Firebase");
 
      localStorage.removeItem("yourAuthToken");
@@ -185,14 +185,14 @@ const UserProfileDropdown = () => {
      setTimeout(() => {
        console.log("Redirecting to login page...");
        navigate("/login");
-     }, 1000); // Delay navigation to ensure Firebase updates state
+     }, 1000); 
    } catch (error) {
      console.error("Error signing out:", error);
      alert("Failed to sign out. Please try again.");
    }
  };
 
-  // Redirect user when logged out
+  
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (!user) {
@@ -201,7 +201,7 @@ const UserProfileDropdown = () => {
       }
     });
 
-    return () => unsubscribe(); // Cleanup the listener when unmounting
+    return () => unsubscribe(); 
   }, []);
 
 
@@ -287,12 +287,12 @@ const UserProfileDropdown = () => {
   );
 };
 
-// Dashboard Component
+
 const Dashboard = () => {
   const [activePage, setActivePage] = useState("Dashboard");
   const stocks = useStockData();
 
-  // Renders content based on selected menu
+  
   const renderContent = useCallback(() => {
     switch (activePage) {
       case "Dashboard":

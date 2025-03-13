@@ -22,7 +22,7 @@ const auth = getAuth(app);
 const githubProvider = new GithubAuthProvider();
 const db = getFirestore(app);
 
-// Force local persistence to ensure proper session handling
+
 setPersistence(auth, browserLocalPersistence)
   .then(() => console.log("Session persistence set to LOCAL"))
   .catch((error) => console.error("Error setting persistence:", error));

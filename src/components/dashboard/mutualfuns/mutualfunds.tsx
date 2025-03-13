@@ -4,9 +4,9 @@ import { FaChartLine, FaPercentage } from "react-icons/fa";
 import { motion } from "framer-motion";
 import Modal from "react-modal";
 import Lottie from "lottie-react";
-import { useAuth } from "../AuthContext"; // Import your AuthContext
-import processingAnimation from "../../../assets/animation/Animation - loading.json"; // Replace with your file path
-import successAnimation from "../../../assets/animation/Animation -success.json"; // Replace with your file path
+import { useAuth } from "../AuthContext"; 
+import processingAnimation from "../../../assets/animation/Animation - loading.json"; 
+import successAnimation from "../../../assets/animation/Animation -success.json"; 
 import Display from "./display"
 
 
@@ -124,7 +124,7 @@ const MutualFundsDashboard = () => {
       return;
     }
 
-    setIsProcessing(true); // Start processing animation immediately
+    setIsProcessing(true); 
     try {
       await recordMutualFundInvestment(
         selectedFund.name,
@@ -137,7 +137,7 @@ const MutualFundsDashboard = () => {
         closeModal();
       }, 2000);
     } catch (error) {
-      setIsProcessing(false); // Stop processing animation on error
+      setIsProcessing(false); 
       console.error("Investment failed:", error);
       alert("Investment failed. Please try again.");
     }
@@ -447,7 +447,7 @@ const styles = {
   statValue: { color: "green", fontWeight: "bold" },
   table: {
     width: "100%",
-    borderCollapse: "collapse" as "collapse", // Explicitly defining the type
+    borderCollapse: "collapse" as "collapse", 
     marginBottom: "20px",
   },
   tableHeader: {

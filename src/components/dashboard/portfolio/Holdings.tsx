@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { doc, onSnapshot } from "firebase/firestore";
-import { useAuth } from "../AuthContext"; // Adjust path
-import { db } from "../../Login/firebase"; // Firestore instance
-
+import { useAuth } from "../AuthContext"; 
+import { db } from "../../Login/firebase"; 
 interface StockHolding {
   symbol: string;
   quantity: number;
@@ -18,21 +17,21 @@ const useStockHoldings = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const API_KEY = "cuqpds1r01qhaag2qr4gcuqpds1r01qhaag2qr50"; // Finnhub API Key
+  const API_KEY = "cuqpds1r01qhaag2qr4gcuqpds1r01qhaag2qr50"; 
 
   useEffect(() => {
     if (!user) return;
 
     const userRef = doc(db, "users", user.uid);
 
-    // Listen for real-time updates
+    
     const unsubscribe = onSnapshot(userRef, (docSnap) => {
       if (docSnap.exists()) {
         const data = docSnap.data();
         if (Array.isArray(data.purchases)) {
           const stockHoldings: { [stock: string]: number } = {};
 
-          // Calculate net holdings
+          
           data.purchases.forEach((p) => {
             const stock = p.stock;
             if (!stockHoldings[stock]) stockHoldings[stock] = 0;
@@ -44,7 +43,7 @@ const useStockHoldings = () => {
       }
     });
 
-    return () => unsubscribe(); // Cleanup on unmount
+    return () => unsubscribe(); 
   }, [user]);
 
   useEffect(() => {
@@ -95,7 +94,7 @@ const useStockHoldings = () => {
     }
   }, [holdings]);
 
-  // Transform holdings and prices into an array of StockHolding objects
+  
   const stockHoldings: StockHolding[] = Object.keys(holdings).map((symbol) => ({
     symbol,
     quantity: holdings[symbol],

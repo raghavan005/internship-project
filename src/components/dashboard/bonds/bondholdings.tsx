@@ -5,7 +5,7 @@ import {
   query,
   where,
 } from "firebase/firestore";
-import app from "../../Login/firebase"; // Adjust path if needed
+import app from "../../Login/firebase"; 
 import { useState, useEffect } from "react";
 
 interface BondHolding {

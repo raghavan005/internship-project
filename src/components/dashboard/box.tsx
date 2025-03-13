@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { doc, onSnapshot } from "firebase/firestore";
-import { useAuth } from "../dashboard/AuthContext"; // Auth hook
-import { db } from "../Login/firebase"; // Firestore instance
+import { useAuth } from "../dashboard/AuthContext"; 
+import { db } from "../Login/firebase"; 
 import img from "../../assets/images/1200x630wa.png";
 import { motion } from "framer-motion";
 import apple from "../../assets/images/8ed3d547-94ff-48e1-9f20-8c14a7030a02_2000x2000.jpg";
@@ -108,21 +108,21 @@ const Holdings = () => {
   const [error, setError] = useState<string | null>(null);
   
 
-  const API_KEY = "cuqpds1r01qhaag2qr4gcuqpds1r01qhaag2qr50"; // Finnhub API Key
+  const API_KEY = "cuqpds1r01qhaag2qr4gcuqpds1r01qhaag2qr50"; 
 
   useEffect(() => {
     if (!user) return;
 
     const userRef = doc(db, "users", user.uid);
 
-    // Listen for real-time updates
+    
     const unsubscribe = onSnapshot(userRef, (docSnap) => {
       if (docSnap.exists()) {
         const data = docSnap.data();
         if (Array.isArray(data.purchases)) {
           const stockHoldings: { [stock: string]: number } = {};
 
-          // Calculate net holdings
+          
           data.purchases.forEach((p) => {
             const stock = p.stock;
             if (!stockHoldings[stock]) stockHoldings[stock] = 0;
@@ -134,7 +134,7 @@ const Holdings = () => {
       }
     });
 
-    return () => unsubscribe(); // Cleanup on unmount
+    return () => unsubscribe(); 
   }, [user]);
 
   useEffect(() => {
@@ -186,7 +186,7 @@ const Holdings = () => {
   }, [holdings]);
   
 
-  // Function to get stock logos
+  
   const getStockImage = (stockName: string): string => {
     const images: { [key: string]: string } = {
       AAPL: apple,

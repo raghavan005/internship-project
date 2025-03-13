@@ -44,7 +44,7 @@ const PurchaseHistory: React.FC = () => {
             );
             setPurchaseHistory(filteredPurchases);
 
-            // Calculate holdings
+            
             const newHoldings: { [stock: string]: number } = {};
             filteredPurchases.forEach((entry) => {
               const stock = entry.stock;

@@ -10,10 +10,10 @@ import {
   query,
   where,
 } from "firebase/firestore";
-import app from "../../Login/firebase"; // Adjust the path
-import Lottie from "lottie-react"; // Import Lottie
-import loadingAnimation from "../../../assets/animation/Animation - loading.json"; // Import your loading animation
-import successAnimation from "../../../assets/animation/Animation -success.json"; // Import your success animation
+import app from "../../Login/firebase"; 
+import Lottie from "lottie-react"; 
+import loadingAnimation from "../../../assets/animation/Animation - loading.json"; 
+import successAnimation from "../../../assets/animation/Animation -success.json"; 
 
 
 interface Bond {
@@ -25,7 +25,7 @@ interface Bond {
 }
 
 interface Purchase {
-  id: string; // Change id to string, since firebase document id's are strings.
+  id: string; 
   bondName: string;
   investment: number;
   profit: number;
@@ -49,7 +49,7 @@ const BondSellingPage: React.FC = () => {
 
   useEffect(() => {
     setUserWallet(getWalletAmount());
-    fetchPurchaseHistory(); // Fetch purchase history on component mount
+    fetchPurchaseHistory(); 
   }, [getWalletAmount]);
 
   useEffect(() => {
@@ -113,8 +113,8 @@ const BondSellingPage: React.FC = () => {
       userWallet !== null &&
       userWallet >= parsedInvestment
     ) {
-      setIsLoading(true); // Start loading animation
-      setIsSuccess(false); // Reset success state
+      setIsLoading(true); 
+      setIsSuccess(false);
 
       try {
         if (selectedBond) {
@@ -136,20 +136,20 @@ const BondSellingPage: React.FC = () => {
           );
           await recordBondPurchase(parsedInvestment);
           setUserWallet(getWalletAmount());
-          fetchPurchaseHistory(); // Refetch purchase history after purchase
-          setIsLoading(false); // Stop loading animation
-          setIsSuccess(true); // Start success animation
+          fetchPurchaseHistory(); 
+          setIsLoading(false); 
+          setIsSuccess(true); 
         }
       } catch (error) {
         console.error("Error during purchase:", error);
         alert("Purchase failed. Please try again.");
-        setIsLoading(false); // Stop loading animation on error
+        setIsLoading(false); 
       }
 
       setTimeout(() => {
         setShowModal(false);
-        setIsSuccess(false); // Reset success state
-      }, 2000); // Hide modal and reset success after 2 seconds
+        setIsSuccess(false); 
+      }, 2000); 
     } else if (userWallet !== null && userWallet < parsedInvestment) {
       alert("Insufficient funds in your wallet.");
     }
@@ -178,7 +178,7 @@ const BondSellingPage: React.FC = () => {
           investment: data.investment,
           profit: data.profit,
           totalReturn: data.totalReturn,
-          purchaseDate: data.purchaseDate.toDate(), // Convert Firestore Timestamp to Date
+          purchaseDate: data.purchaseDate.toDate(), 
         });
       });
       purchases.sort(
@@ -315,7 +315,7 @@ const BondSellingPage: React.FC = () => {
                   top: "50%",
                   left: "50%",
                   transform: "translate(-50%, -50%)",
-                  zIndex: 1051, // Ensure it's above the modal
+                  zIndex: 1051, 
                 }}
               >
                 <Lottie
@@ -331,7 +331,7 @@ const BondSellingPage: React.FC = () => {
                   top: "50%",
                   left: "50%",
                   transform: "translate(-50%, -50%)",
-                  zIndex: 1051, // Ensure it's above the modal
+                  zIndex: 1051, 
                 }}
               >
                 <Lottie
