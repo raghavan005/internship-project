@@ -40,7 +40,7 @@ You can view the initial design prototype here: [Figma Design URL](https://www.f
 - Advanced analytics and market trends
 - Integration with live trading APIs
 
-## License
+## NOTICE
 This project is for educational and demonstration purposes only. **No real money is used in this platform.**
 
 ## Contact
